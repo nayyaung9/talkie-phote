@@ -20,6 +20,7 @@ module.exports = function(app, config) {
           'Origin',
           'X-Requested-With',
           'Content-Type',
+          'Access-Control-Allow-Origin',
           'Accept',
           'x-access-token',
         ],
