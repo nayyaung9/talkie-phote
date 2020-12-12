@@ -5,6 +5,7 @@ const CONFIG = require("../../config/db");
 
 exports.authenticate = async (req, res) => {
   const { email, fullname, avatar_url } = req.body;
+  console.log(req.body);
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -21,6 +22,17 @@ exports.authenticate = async (req, res) => {
       return res.status(500).json({ success: false, data: err.message });
     }
   } else {
-    return res.status(200).json({ success: true, data: user });
+    try {
+      let existedUser = await User.findOneAndUpdate(
+        {
+          _id: user._id,
+        },
+        { $set: req.body },
+        { new: true }
+      );
+      return res.status(200).json({ success: true, data: existedUser });
+    } catch (err) {
+      return res.status(500).json({ success: false, data: err.message });
+    }
   }
 };

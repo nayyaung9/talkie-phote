@@ -14,3 +14,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.right {
+  justify-content: flex-end !important;
+}
+.left {
+  justify-content: flex-start !important;
+}
