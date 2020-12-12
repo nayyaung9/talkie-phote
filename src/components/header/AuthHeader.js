@@ -29,6 +29,7 @@ export default function AuthHeader() {
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
+          <div className={classes.root} />
           <Typography variant="h6" className={classes.title}>
           Talkie Phote
           </Typography>

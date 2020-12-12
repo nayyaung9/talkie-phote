@@ -8,6 +8,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
+import FacebookLogin from "react-facebook-login";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,6 +19,13 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = () => {
   const classes = useStyles();
+
+  const responseFacebook = (response) => {
+    console.log(response);
+  }
+
+  // console.log(process.env.REACT_APP_FACEBOOK_APPID);
+ 
   return (
     <div>
       <AuthHeader />
@@ -36,46 +44,14 @@ const Login = () => {
               align="center"
               gutterBottom
             >
-              Login
+              Talkie Phote Kya Mel
             </Typography>
-            <form>
-              <TextField
-                type="text"
-                id="username"
-                label="Username"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                size="small"
-                style={{ marginBottom: 10 }}
-              />
-
-              <TextField
-                type="password"
-                id="password"
-                label="password"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                size="small"
-                style={{ marginBottom: 10 }}
-              />
-
-              <Button
-                variant="outlined"
-                fullWidth
-                type="submit"
-                style={{
-                  borderWidth: 1,
-                  borderColor: "#0e9f68",
-                  borderStyle: "solid",
-                  color: "#202627",
-                  marginTop: 10,
-                }}
-              >
-                Login
-              </Button>
-            </form>
+            <FacebookLogin
+              appId="188832119556873"
+              fields="name,email,picture"
+              size="small"
+              callback={responseFacebook}
+            />
           </div>
         </Paper>
       </Grid>
