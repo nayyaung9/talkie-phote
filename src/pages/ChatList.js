@@ -1,113 +1,115 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import AppWrapper from "../components/AppWrapper";
-import {
-  makeStyles,
-  Paper,
-  TextField,
-  Button,
-  Avatar,
-} from "@material-ui/core";
-import io from "socket.io-client";
-import { useSelector } from "react-redux";
+import { makeStyles, Paper, Grid, Button, Typography } from "@material-ui/core";
+import JoinDialog from "../components/dialog/JoinDialog";
+import history from "../history";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     boxShadow: "none",
   },
-
-  container: {
-    bottom: 0,
-    marginLeft: 10,
-    marginRight: 10
-  },
-  bubbleContainer: {
+  joinButton: {
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: "rgb(72, 191, 131)",
+    borderStyle: "solid",
+    color: "rgb(72, 191, 131)",
+    paddingTop: "6px",
+    borderRight: "20px",
+    paddingBottom: "6px",
+    borderLeft: "20px",
     width: "100%",
-    display: "flex",
-    alignItems: "center",
+    fontWeight: 500,
+    "&:hover": {
+      backgroundColor: "rgb(72, 191, 131)",
+      color: "white",
+    },
   },
-  bubble: {
-    border: "0.5px solid black",
-    borderRadius: "10px",
-    margin: "5px",
-    padding: "10px",
-    display: "inline-block",
+  createButton: {
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: "rgb(72, 191, 131)",
+    borderStyle: "solid",
+    color: "#fff",
+    backgroundColor: "rgb(72, 191, 131)",
+    paddingTop: "6px",
+    borderRight: "20px",
+    paddingBottom: "6px",
+    borderLeft: "20px",
+    width: "100%",
+    marginRight: 8,
+    fontWeight: 500,
+    "&:hover": {
+      backgroundColor: "rgb(72, 191, 131)",
+      color: "white",
+    },
   },
 }));
 
 const ChatList = () => {
-  const ENDPOINT = "http://localhost:8000";
   const classes = useStyles();
+  const [joinDialog, setJoinDialog] = useState(false);
 
-  const auth = useSelector((state) => state.auth.user);
+  const openJoinDialog = () => {
+    setJoinDialog(true);
+  };
 
-  let roomId = "#alpha8";
+  const closeJoinDialog = () => {
+    setJoinDialog(false);
+  };
 
-  var socket = io(ENDPOINT, {
-    query: { roomId },
-  });
-
-  const [items, setItems] = useState([]);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    socket.on("received", (message) => {
-      const incomingMessages = {
-        ...message,
-        ownedByCurrentUser: message.data.user._id === auth._id,
-      };
-      setItems((items) => [...items, incomingMessages]);
-    });
-  }, []);
-
-  const onSendMessage = (e) => {
-    e.preventDefault();
-    const payload = {
-      message,
-      user: auth,
-    };
-
-    socket.emit("event://send-message", JSON.stringify(payload));
+  const joinRoomById = (roomId) => {
+    setJoinDialog(false);
+    history.push(`/chat/${roomId}`);
   };
 
   return (
     <AppWrapper>
-      <div style={{ padding: 10, background: "#ddd", height: "100vh" }}>
-        <Paper className={classes.paper}>
-          <form onSubmit={onSendMessage}>
-            <TextField
-              placeholder="Type a message"
-              onChange={(e) => setMessage(e.target.value)}
-              value={message}
+      <Paper className={classes.paper}>
+        <Grid
+          container
+          spacing={0}
+          alignItems="center"
+          justify="center"
+          style={{ minHeight: "80vh" }}
+        >
+          <Paper style={{ margin: 20, boxShadow: "none", textAlign: "center" }}>
+            <div className={classes.root}>
+              <div style={{ marginBottom: 20 }}>
+                <Typography
+                  variant="h5"
+                  color="textSecondary"
+                  align="center"
+                  gutterBottom
+                >
+                  Talkie Phote Kya Mal, Room Join Lite
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={12}>
+                    <Button className={classes.createButton}>
+                      Create a room
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
+                    <Button
+                      className={classes.joinButton}
+                      onClick={openJoinDialog}
+                    >
+                      Join a room
+                    </Button>
+                  </Grid>
+                </Grid>
+              </div>
+            </div>
+            <JoinDialog
+              joinDialog={joinDialog}
+              closeJoinDialog={closeJoinDialog}
+              joinRoomById={joinRoomById}
             />
-            <Button type="submit">Send</Button>
-          </form>
-        </Paper>
-
-        <Paper>
-          <div className={classes.container}>
-            {items &&
-              items.map((item, i) => (
-                <React.Fragment>
-                  <div
-                    className={`${classes.bubbleContainer} ${
-                      item.ownedByCurrentUser ? "right" : "left"
-                    }`}
-                    key={i}
-                  >
-                    {!item.ownedByCurrentUser && (
-                      <Avatar src={item.data.user.avatar_url} />
-                    )}
-
-                    <div key={i++} className={classes.bubble}>
-                      <div className={classes.button}>{item.data.message}</div>
-                    </div>
-                  </div>
-                </React.Fragment>
-              ))}
-          </div>
-        </Paper>
-      </div>
+          </Paper>
+        </Grid>
+      </Paper>
     </AppWrapper>
   );
 };

@@ -40,35 +40,16 @@ server.listen(PORT, () => {
   console.log("We are live on port: ", PORT);
 });
 
-// io.on("connection", function (socket) {
-//   socket.on("event://send-message", function (message) {
-//     console.log("Message from client : " + message);
-
-//     const data = JSON.parse(message);
-//     socket.broadcast.emit("received", { message: data });
-
-    
-//     // let chatMessage = new Chat({ message: data.message, sender: data.user._id });
-//     // chatMessage.save();
-//   });
-
-//   socket.on("room", function (room) {
-//     console.log('room', room);
-//     socket.join(room);
-//   });
-// });
-
-
 io.on("connection", socket => {
   const { roomId } = socket.handshake.query;
   socket.join(roomId);
 
-  console.log(roomId);
-
   socket.on("event://send-message", function (message) {
 
     const data = JSON.parse(message);
-    // socket.broadcast.emit("received", { message: data });
+
+    console.log("1")
+
     io.in(roomId).emit("received", { data });
 
   });

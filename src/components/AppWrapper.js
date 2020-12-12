@@ -3,7 +3,6 @@ import {
   AppBar,
   CssBaseline,
   Paper,
-  Divider,
   Drawer,
   Hidden,
   IconButton,
@@ -27,7 +26,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 320;
 
@@ -39,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   drawer: {
     flexShrink: 0,
@@ -110,6 +109,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AppWrapper(props) {
+  const auth = useSelector((state) => state.auth);
   const { window, children } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -193,26 +193,7 @@ function AppWrapper(props) {
             <MailIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
+        <p>Logout</p>
       </MenuItem>
     </Menu>
   );
@@ -332,7 +313,6 @@ function AppWrapper(props) {
               color="textSecondary"
               variant="contained"
               size="small"
-       
             >
               Create Room
             </Button>
@@ -344,27 +324,44 @@ function AppWrapper(props) {
             >
               Join Room
             </Button>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+            {auth.isAuth ? (
+              <Avatar
+                src={auth.user.avatar_url}
+                alt={auth.user.fullname}
+                onClick={handleProfileMenuOpen}
+              />
+            ) : (
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            )}
           </div>
           <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
+            {auth.isAuth ? (
+              <Avatar
+                src={auth.user.avatar_url}
+                alt={auth.user.fullname}
+                onClick={handleMobileMenuOpen}
+              />
+            ) : (
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            )}
           </div>
         </Toolbar>
       </AppBar>
