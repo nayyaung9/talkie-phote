@@ -20,7 +20,7 @@ if (mongoose.connection.readyState != 1) {
   mongoose.connect(config.db, options);
   const db = mongoose.connection;
   db.on("error", (err) => {
-    throw new Error(`Unable to connect to database at ${config.db} err`);
+    throw new Error(`Unable to connect to database at ${config.db} err, ${err}`);
   });
 
   db.once("open", function () {

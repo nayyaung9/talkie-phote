@@ -55,7 +55,7 @@ const ChatRoom = () => {
   // text message input
   const text = useRef("");
   const socketRef = useRef();
-  const ENDPOINT = "http://localhost:8000";
+  const ENDPOINT = "https://api-talkie-phote.herokuapp.com";
   const classes = useStyles();
   // let roomId = "#alpha8";
   const auth = useSelector((state) => state.auth.user);

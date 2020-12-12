@@ -12,11 +12,6 @@ const config = {
     port: 27017,
     db: 'mongodb://localhost:27017/talkie-phote',
     jwtSecret: process.env.jwtSecret,
-    cloudinary: {
-      name: process.env.cloudName,
-      api_key: process.env.cloudinaryKey,
-      api_secret: process.env.cloudinarySecret,
-    },
   },
   production: {
     root: rootPath,
@@ -24,13 +19,8 @@ const config = {
       name: 'talkie-phote',
     },
     port: 27017,
-    // db: `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@ds229088.mlab.com:29088/mmscience`,
+    db: `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.qmrxs.mongodb.net/talkie-phote?retryWrites=true&w=majority`,
     jwtSecret: process.env.jwtSecret,
-    cloudinary: {
-      name: process.env.cloudName,
-      api_key: process.env.cloudinaryKey,
-      api_secret: process.env.cloudinarySecret,
-    },
   },
 }
 
