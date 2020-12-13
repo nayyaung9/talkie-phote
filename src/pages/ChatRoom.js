@@ -60,8 +60,8 @@ const ChatRoom = () => {
   const text = useRef("");
   const socketRef = useRef();
 
-  // const ENDPOINT = "https://api-talkie-phote.herokuapp.com";
-  const ENDPOINT = "http://localhost:8000";
+  const ENDPOINT = "https://api-talkie-phote.herokuapp.com";
+  // const ENDPOINT = "http://localhost:8000";
 
   useEffect(() => {
     socketRef.current = io(ENDPOINT, {

@@ -60,7 +60,7 @@ io.on("connection", async (socket) => {
 
   await Chat.find({ roomId })
     .populate("sender")
-    .limit(1).sort({ _id: 1 })
+    .limit(100).sort({ _id: 1 })
     .then((res) => {
       io.in(roomId).emit("received", { data: res });
     });
