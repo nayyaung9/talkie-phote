@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MessageInput({ text, onSendMessage }) {
+export default function MessageInput({ text, onSendMessage, handleKeyPress }) {
   const classes = useStyles();
 
   return (
@@ -62,6 +62,7 @@ export default function MessageInput({ text, onSendMessage }) {
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
+              onKeyPress={handleKeyPress}
               multiline
               rowsMax={4}
               inputRef={text}

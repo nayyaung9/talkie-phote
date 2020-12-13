@@ -3,8 +3,6 @@ import AppWrapper from "../components/AppWrapper";
 import {
   makeStyles,
   Paper,
-  TextField,
-  Button,
   Avatar,
   Typography,
   Tooltip,
@@ -13,7 +11,9 @@ import io from "socket.io-client";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import MessageInput from "../components/chat/MessageInput";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
+import api from "../api";
+import _ from "lodash";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   container: {
-    bottom: 0,
+    // bottom: 0,
     marginLeft: 10,
     marginRight: 10,
   },
@@ -50,15 +50,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ChatRoom = () => {
+  const [items, setItems] = useState([]);
+  const auth = useSelector((state) => state.auth.user);
+
+  const classes = useStyles();
   const { roomId } = useParams();
 
   // text message input
   const text = useRef("");
   const socketRef = useRef();
-  const ENDPOINT = "https://api-talkie-phote.herokuapp.com";
-  const classes = useStyles();
-  // let roomId = "#alpha8";
-  const auth = useSelector((state) => state.auth.user);
+
+  // const ENDPOINT = "https://api-talkie-phote.herokuapp.com";
+  const ENDPOINT = "http://localhost:8000";
 
   useEffect(() => {
     socketRef.current = io(ENDPOINT, {
@@ -66,29 +69,27 @@ const ChatRoom = () => {
     });
 
     socketRef.current.on("received", (message) => {
-      const incomingMessages = {
-        ...message,
-        ownedByCurrentUser: message.data.user._id === auth._id,
-      };
-      setItems((items) => [...items, incomingMessages]);
+      setItems((items) => [...items, message.data]);
     });
-
- 
   }, [roomId]);
-
-
-
-  const [items, setItems] = useState([]);
-
 
   const onSendMessage = (e) => {
     e.preventDefault();
     const payload = {
       message: text.current.value,
       user: auth,
+      roomId,
     };
 
     socketRef.current.emit("event://send-message", JSON.stringify(payload));
+  };
+
+  // typing event
+
+  const handleKeyPress = (event) => {
+    if (event) {
+      socketRef.current.emit("typing", JSON.stringify(auth));
+    }
   };
 
   return (
@@ -97,49 +98,63 @@ const ChatRoom = () => {
         <Paper className={classes.paper}>
           <div className={classes.container}>
             {items &&
-              items.map((item, i) => (
-                <React.Fragment>
-                  <div
-                    className={`${classes.bubbleContainer} ${
-                      item.ownedByCurrentUser ? "right" : "left"
-                    }`}
-                    key={i}
-                  >
-                    {!item.ownedByCurrentUser && (
-                      <Avatar src={item.data.user.avatar_url} />
-                    )}
-                    <Tooltip title="Add" arrow placement="left-start">
-                      <div>
-                        {!item.ownedByCurrentUser && (
-                          <Typography
-                            component="span"
-                            color="textSecondary"
-                            gutterBottom
-                            style={{ paddingLeft: 8, fontSize: 12 }}
-                          >
-                            {item.data.user.fullname}
-                          </Typography>
+              items.map((data, i) => {
+                return data.map((item, i) => {
+                  return (
+                    <React.Fragment>
+                      <div
+                        className={`${classes.bubbleContainer} ${
+                          item?.sender?._id == auth._id ? "right" : "left"
+                        }`}
+                        key={i}
+                      >
+                        {item?.sender?._id != auth._id && (
+                          <Avatar src={item?.sender?.avatar_url} />
                         )}
-
-                        <div
-                          key={i}
-                          className={
-                            item.ownedByCurrentUser
-                              ? classes.bubbleRight
-                              : classes.bubbleLeft
+                        <Tooltip
+                          title={moment(item.createdAt).fromNow()}
+                          arrow
+                          placement={
+                            item?.sender?._id != auth._id ? "right" : "left"
                           }
                         >
-                          <div className={classes.button}>
-                            {item.data.message}
+                          <div>
+                            {!item?.sender?._id == auth._id && (
+                              <Typography
+                                component="span"
+                                color="textSecondary"
+                                gutterBottom
+                                style={{ paddingLeft: 8, fontSize: 12 }}
+                              >
+                                {item?.sender?.fullname}
+                              </Typography>
+                            )}
+
+                            <div
+                              key={i}
+                              className={
+                                item?.sender?._id == auth._id
+                                  ? classes.bubbleRight
+                                  : classes.bubbleLeft
+                              }
+                            >
+                              <div className={classes.button}>
+                                {item?.message}
+                              </div>
+                            </div>
                           </div>
-                        </div>
+                        </Tooltip>
                       </div>
-                    </Tooltip>
-                  </div>
-                </React.Fragment>
-              ))}
+                    </React.Fragment>
+                  );
+                });
+              })}
           </div>
-          <MessageInput text={text} onSendMessage={onSendMessage} />
+          <MessageInput
+            text={text}
+            onSendMessage={onSendMessage}
+            handleKeyPress={handleKeyPress}
+          />
         </Paper>
       </div>
     </AppWrapper>

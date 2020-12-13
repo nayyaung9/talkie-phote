@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 @import url('https://mmwebfonts.comquas.com/fonts/?font=pyidaungsu');
 
+body, html {
+  height: 100% !important;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -20,4 +23,9 @@ code {
 }
 .left {
   justify-content: flex-start !important;
+}
+
+.messages {
+  height: 100% !important;
+  overflow-y: auto;
 }
