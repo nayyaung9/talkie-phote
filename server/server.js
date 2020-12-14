@@ -4,6 +4,7 @@ var express = require("express"),
   app = express(),
   server = require("http").Server(app),
   Chat = require("./app/models/Chat"),
+  chatController = require("./app/controllers/chat.controller"),
   io = require("socket.io")(server, {
     cors: {
       origin: ["https://talkie-phote.netlify.app", "http://localhost:3000"],
@@ -58,29 +59,19 @@ io.on("connection", async (socket) => {
   const { roomId } = socket.handshake.query;
   socket.join(roomId);
 
-  await Chat.find({ roomId })
-    .populate("sender")
-    .limit(100).sort({ _id: 1 })
-    .then((res) => {
-      io.in(roomId).emit("received", { data: res });
-    });
+  socket.on("room", async function (roomId) {
+    socket.join(roomId);
+  });
 
-  socket.on("event://send-message", function (message) {
+  socket.on("event://send-message", async function (message) {
     const data = JSON.parse(message);
 
-    let newMessage = new Chat({
-      message: data.message,
-      sender: data.user._id,
-      roomId: data.roomId,
-    });
+    await chatController.sendMessage(data, io);
+  });
 
-    newMessage.save().then(async (result) => {
-      await Chat.find({ roomId, _id: result._id })
-        .populate("sender")
+  await chatController.fetchInitialMessageByRoomId(roomId, io);
 
-        .then((data) => {
-          io.in(roomId).emit("received", { data });
-        });
-    });
+  socket.on("disconnect", function () {
+    console.log("user disconnected");
   });
 });

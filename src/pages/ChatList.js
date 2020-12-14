@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import AppWrapper from "../components/AppWrapper";
 import { makeStyles, Paper, Grid, Button, Typography } from "@material-ui/core";
 import JoinDialog from "../components/dialog/JoinDialog";
+import CreateDialog from "../components/dialog/CreateDialog";
+import RoomList from "../components/room/RoomList";
 import history from "../history";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 const ChatList = () => {
   const classes = useStyles();
   const [joinDialog, setJoinDialog] = useState(false);
+  const [createDialog, setCreateDialog] = useState(false);
 
   const openJoinDialog = () => {
     setJoinDialog(true);
@@ -64,16 +67,18 @@ const ChatList = () => {
     history.push(`/chat/${roomId}`);
   };
 
+  const openCreateDialog = () => {
+    setCreateDialog(true);
+  };
+
+  const closeCreateDialog = () => {
+    setCreateDialog(false);
+  };
+
   return (
     <AppWrapper>
       <Paper className={classes.paper}>
-        <Grid
-          container
-          spacing={0}
-          alignItems="center"
-          justify="center"
-          style={{ minHeight: "80vh" }}
-        >
+        <Grid container spacing={0} alignItems="center" justify="center">
           <Paper style={{ margin: 20, boxShadow: "none", textAlign: "center" }}>
             <div className={classes.root}>
               <div style={{ marginBottom: 20 }}>
@@ -87,7 +92,10 @@ const ChatList = () => {
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={12}>
-                    <Button className={classes.createButton}>
+                    <Button
+                      className={classes.createButton}
+                      onClick={openCreateDialog}
+                    >
                       Create a room
                     </Button>
                   </Grid>
@@ -102,13 +110,21 @@ const ChatList = () => {
                 </Grid>
               </div>
             </div>
+
             <JoinDialog
               joinDialog={joinDialog}
               closeJoinDialog={closeJoinDialog}
               joinRoomById={joinRoomById}
             />
+            <CreateDialog
+              createDialog={createDialog}
+              closeCreateDialog={closeCreateDialog}
+            />
           </Paper>
         </Grid>
+        <Paper className={classes.paper}>
+          <RoomList />
+        </Paper>
       </Paper>
     </AppWrapper>
   );

@@ -1,20 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-@import url('https://mmwebfonts.comquas.com/fonts/?font=pyidaungsu');
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+@import url("https://mmwebfonts.comquas.com/fonts/?font=pyidaungsu");
 
-body, html {
+body,
+html {
   height: 100% !important;
 }
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -25,7 +26,17 @@ code {
   justify-content: flex-start !important;
 }
 
-.messages {
-  height: 100% !important;
-  overflow-y: auto;
+#chat {
+  max-height: calc(100vh - 128px);
+  overflow-y: scroll; 
+}
+
+#chat::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#chat {
+-ms-overflow-style: none;  /* IE and Edge */
+scrollbar-width: none;  /* Firefox */
 }

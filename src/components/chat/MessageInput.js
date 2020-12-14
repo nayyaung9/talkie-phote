@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, fade, InputBase, IconButton } from "@material-ui/core";
+import { makeStyles, InputBase, IconButton } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
