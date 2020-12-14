@@ -78,7 +78,7 @@ const ChatRoom = () => {
 
     // event://init-message
     socketRef.current.on("event://init-message", (message) => {
-      setItems((items) => [...items, message]);
+      setItems((items) => [message]);
       scrollToBottom();
     });
 
