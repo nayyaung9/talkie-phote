@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import AppWrapper from "../components/AppWrapper";
-import {
-  makeStyles,
-  Paper,
-  Avatar,
-  Typography,
-  Tooltip,
-} from "@material-ui/core";
+import { makeStyles, Paper, Avatar, Typography } from "@material-ui/core";
 import io from "socket.io-client";
 import { useSelector } from "react-redux";
 import moment from "moment";
@@ -17,6 +11,8 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(1),
     boxShadow: "none",
+    background: "#eff7fe",
+    height: "100%",
   },
 
   container: {
@@ -27,23 +23,25 @@ const useStyles = makeStyles((theme) => ({
   bubbleContainer: {
     width: "100%",
     display: "flex",
-    alignItems: "center",
+    // alignItems: "center",
     flexDirection: "row",
   },
   bubbleRight: {
-    border: "0.5px solid #0099ff",
-    background: "#0099ff",
-    color: "#fff",
+    border: "0.5px solid #e5edf5",
+    background: "#e5edf5",
     borderRadius: "10px",
-    margin: "5px 5px 0px 5px",
+    margin: "5px",
     padding: "10px",
+    display: "inline-block",
   },
   bubbleLeft: {
-    border: "0.5px solid #f2f2f2",
-    background: "#f2f2f2",
+    border: "0.5px solid #1c9dea",
+    background: "#1c9dea",
+    color: "#fff",
     borderRadius: "10px",
-    margin: "5px 5px 0px 5px",
+    margin: "5px",
     padding: "10px",
+    display: "inline-block",
   },
 }));
 
@@ -53,7 +51,6 @@ const ChatRoom = () => {
 
   const classes = useStyles();
   const { roomId } = useParams();
-
 
   // text message input
   const text = useRef("");
@@ -115,7 +112,7 @@ const ChatRoom = () => {
 
   return (
     <AppWrapper>
-      <div style={{ background: "#fff", height: "100%" }}>
+      <div style={{ background: "#eff7fe", height: "100%" }}>
         <Paper className={classes.paper}>
           <div className={classes.container}>
             <div id="chat">
@@ -133,35 +130,24 @@ const ChatRoom = () => {
                           {item?.sender?._id !== auth._id && (
                             <Avatar src={item?.sender?.avatar_url} />
                           )}
-                          <Tooltip
-                            title={moment(item.createdAt).fromNow()}
-                            arrow
-                            placement={
-                              item?.sender?._id !== auth._id ? "right" : "left"
-                            }
-                          >
-                            <div>
-                              {item?.sender?._id !== auth._id && (
-                                <Typography
-                                  component="span"
-                                  color="textSecondary"
-                                  gutterBottom
-                                  style={{ paddingLeft: 8, fontSize: 12 }}
-                                >
-                                  {item?.sender?.fullname}
-                                </Typography>
-                              )}
 
-                              <div
-                                key={i}
-                                className={
-                                  item?.sender?._id === auth._id
-                                    ? classes.bubbleRight
-                                    : classes.bubbleLeft
-                                }
+                          <div style={{ marginLeft: 8 }}>
+                            <div>
+                              <Typography
+                                component="span"
+                                color="inherit"
+                                gutterBottom
+                                style={{
+                                  paddingLeft: 8,
+                                  paddingRight: 8,
+                                  fontSize: 12,
+                                  fontWeight: "bold",
+                                }}
                               >
-                                <div>{item?.message}</div>
-                              </div>
+                                {item?.sender?._id !== auth._id
+                                  ? item?.sender?.fullname
+                                  : "You"}
+                              </Typography>
                               <Typography
                                 component="span"
                                 color="textSecondary"
@@ -170,10 +156,21 @@ const ChatRoom = () => {
                                   fontWeight: 300,
                                 }}
                               >
-                                {moment(item.createdAt).fromNow()}
+                                {moment(item.createdAt).format("h:mm a")}
                               </Typography>
                             </div>
-                          </Tooltip>
+
+                            <div
+                              key={i}
+                              className={
+                                item?.sender?._id === auth._id
+                                  ? classes.bubbleRight
+                                  : classes.bubbleLeft
+                              }
+                            >
+                              <div>{item?.message}</div>
+                            </div>
+                          </div>
                         </div>
                       </React.Fragment>
                     );
