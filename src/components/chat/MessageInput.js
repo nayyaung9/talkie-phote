@@ -57,7 +57,7 @@ export default function MessageInput({ text, onSendMessage, handleKeyPress }) {
         <Toolbar style={{ alignItems: "flex-end", marginBottom: 10 }}>
           <div className={classes.search}>
             <InputBase
-              placeholder="Type a message..."
+              placeholder="Write your message..."
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,

@@ -63,6 +63,7 @@ const Login = () => {
                 appId="188832119556873"
                 fields="name,email,picture"
                 size="small"
+                disableMobileRedirect={true}
                 callback={responseFacebook}
               />
             </div>
