@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import AppWrapper from "../components/AppWrapper";
 import { makeStyles, Paper, Avatar, Typography } from "@material-ui/core";
 import io from "socket.io-client";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
 import MessageInput from "../components/chat/MessageInput";
 import { useParams } from "react-router-dom";
+import { roomActions } from "../store/actions/room.action";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
   bubbleContainer: {
     width: "100%",
     display: "flex",
+    marginTop: 10,
     // alignItems: "center",
     flexDirection: "row",
   },
@@ -49,6 +51,7 @@ const ChatRoom = () => {
   const [items, setItems] = useState([]);
   const auth = useSelector((state) => state.auth.user);
 
+  const dispatch = useDispatch();
   const classes = useStyles();
   const { roomId } = useParams();
 
@@ -56,13 +59,20 @@ const ChatRoom = () => {
   const text = useRef("");
   const socketRef = useRef();
 
-  const ENDPOINT = "https://api-talkie-phote.herokuapp.com";
-  // const ENDPOINT = "http://localhost:8000";
+  // const ENDPOINT = "https://api-talkie-phote.herokuapp.com";
+  const ENDPOINT = "http://localhost:8000";
 
   const scrollToBottom = () => {
     const chat = document.getElementById("chat");
     chat.scrollTop = chat.scrollHeight;
   };
+
+  useEffect(() => {
+    dispatch(roomActions.fetchRoomById(roomId));
+  }, [roomId]);
+
+  // room detail reducer
+  const roomDetail = useSelector((state) => state.room.room);
 
   useEffect(() => {
     socketRef.current = io(ENDPOINT, {
@@ -111,7 +121,7 @@ const ChatRoom = () => {
   };
 
   return (
-    <AppWrapper>
+    <AppWrapper roomName={roomDetail && roomDetail.name}>
       <div style={{ background: "#eff7fe", height: "100%" }}>
         <Paper className={classes.paper}>
           <div className={classes.container}>
@@ -121,57 +131,103 @@ const ChatRoom = () => {
                   return data.map((item, i) => {
                     return (
                       <React.Fragment>
-                        <div
-                          className={`${classes.bubbleContainer} ${
-                            item?.sender?._id === auth._id ? "right" : "left"
-                          }`}
-                          key={i}
-                        >
-                          {item?.sender?._id !== auth._id && (
-                            <Avatar src={item?.sender?.avatar_url} />
-                          )}
-
-                          <div style={{ marginLeft: 8 }}>
-                            <div>
-                              <Typography
-                                component="span"
-                                color="inherit"
-                                gutterBottom
+                        {item.event_type !== 0 ? (
+                          <div
+                            className={`${classes.bubbleContainer} center`}
+                            key={i}
+                          >
+                            {item?.event_type != 0 && (
+                              <div
                                 style={{
-                                  paddingLeft: 8,
-                                  paddingRight: 8,
-                                  fontSize: 12,
-                                  fontWeight: "bold",
+                                  display: "flex",
+                                  flexDirection: "column",
                                 }}
                               >
-                                {item?.sender?._id !== auth._id
-                                  ? item?.sender?.fullname
-                                  : "You"}
-                              </Typography>
-                              <Typography
-                                component="span"
-                                color="textSecondary"
-                                style={{
-                                  fontSize: 13,
-                                  fontWeight: 300,
-                                }}
-                              >
-                                {moment(item.createdAt).format("h:mm a")}
-                              </Typography>
-                            </div>
+                                <Typography
+                                  color="textSecondary"
+                                  align="center"
+                                  display="block"
+                                  style={{
+                                    fontSize: 12,
+                                    fontWeight: 300,
+                                  }}
+                                >
+                                  {moment(item.createdAt).format(
+                                    "MMM DD, h:mm a"
+                                  )}
+                                </Typography>
+                                <Typography
+                                  component="span"
+                                  color="textSecondary"
+                                  style={{
+                                    fontSize: 13,
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {item?.sender.fullname} {item?.message}{" "}
+                                </Typography>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div
+                            className={`${classes.bubbleContainer} ${
+                              item?.sender?._id === auth._id ? "right" : "left"
+                            }`}
+                            key={i}
+                          >
+                            {item?.sender?._id !== auth._id && (
+                              <Avatar src={item?.sender?.avatar_url} />
+                            )}
 
                             <div
-                              key={i}
-                              className={
-                                item?.sender?._id === auth._id
-                                  ? classes.bubbleRight
-                                  : classes.bubbleLeft
-                              }
+                              style={{
+                                marginLeft: 8,
+                                textAlign:
+                                  item?.sender?._id === auth._id && "right",
+                              }}
                             >
-                              <div>{item?.message}</div>
+                              <div>
+                                <Typography
+                                  component="span"
+                                  color="inherit"
+                                  gutterBottom
+                                  style={{
+                                    paddingLeft: 8,
+                                    paddingRight: 8,
+                                    fontSize: 14,
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {item?.sender?._id !== auth._id
+                                    ? item?.sender?.fullname
+                                    : "You"}
+                                </Typography>
+                                <Typography
+                                  component="span"
+                                  color="textSecondary"
+                                  style={{
+                                    fontSize: 12,
+                                    fontWeight: 300,
+                                  }}
+                                >
+                                  {moment(item.createdAt).format("h:mm a")}
+                                </Typography>
+                              </div>
+
+                              <div
+                                key={i}
+                                className={
+                                  item?.sender?._id === auth._id
+                                    ? classes.bubbleRight
+                                    : classes.bubbleLeft
+                                }
+                              >
+                                <div>{item?.message}</div>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        )}
                       </React.Fragment>
                     );
                   });

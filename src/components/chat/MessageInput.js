@@ -4,6 +4,9 @@ import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
 import SendIcon from "@material-ui/icons/Send";
+import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
+import { Picker } from "emoji-mart";
+import "emoji-mart/css/emoji-mart.css";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -19,14 +22,15 @@ const useStyles = makeStyles((theme) => ({
   },
   search: {
     position: "relative",
-
     borderRadius: 20,
     backgroundColor: "#f2f2f2",
     marginRight: theme.spacing(2),
     marginLeft: 0,
     width: "100%",
+    display: "flex",
+    flexDirection: "row",
   },
-  searchIcon: {
+  emojiPicker: {
     padding: theme.spacing(0, 2),
     height: "100%",
     position: "absolute",
@@ -35,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
+
   inputRoot: {
     color: "inherit",
     width: "100%",
@@ -49,6 +54,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MessageInput({ text, onSendMessage, handleKeyPress }) {
   const classes = useStyles();
+
+  const addEmoji = (e) => {
+    let sym = e.unified.split("-");
+    let codesArray = [];
+    sym.forEach((el) => codesArray.push("0x" + el));
+    let emoji = String.fromCodePoint(...codesArray);
+
+    return (text.current.value += emoji);
+  };
+
+  const [pickerMode, setPicketMode] = React.useState(false);
 
   return (
     <React.Fragment>
@@ -68,7 +84,25 @@ export default function MessageInput({ text, onSendMessage, handleKeyPress }) {
               inputRef={text}
               inputProps={{ "aria-label": "search" }}
             />
+
+            <div>
+              <IconButton onClick={() => setPicketMode(!pickerMode)}>
+                <InsertEmoticonIcon />
+              </IconButton>
+              {pickerMode && (
+                <Picker
+                  set="apple"
+                  onSelect={addEmoji}
+                  style={{
+                    position: "absolute",
+                    bottom: "55px",
+                    right: "-70px",
+                  }}
+                />
+              )}
+            </div>
           </div>
+
           <IconButton
             edge="right"
             color="primary"

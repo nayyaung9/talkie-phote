@@ -1,4 +1,4 @@
-import { FETCH_ROOMS_SUCCESS } from "../actionTypes";
+import { FETCH_ROOMS_SUCCESS, FETCH_ROOM_DETAIL_SUCCESS } from "../actionTypes";
 
 const initialState = {
   rooms: [],
@@ -11,6 +11,11 @@ export function roomReducer(state = initialState, action) {
       return {
         ...state,
         rooms: action.payload,
+      };
+    case FETCH_ROOM_DETAIL_SUCCESS:
+      return {
+        ...state,
+        room: action.payload,
       };
     default:
       return state;

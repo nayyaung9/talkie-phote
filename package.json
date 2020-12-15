@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.0",
     "dotenv": "^8.2.0",
+    "emoji-mart": "^3.0.0",
     "formik": "^2.2.6",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",

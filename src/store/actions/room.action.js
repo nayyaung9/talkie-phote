@@ -3,6 +3,7 @@ import {
   CASE_LOADING,
   ALERT_STATUS,
   FETCH_ROOMS_SUCCESS,
+  FETCH_ROOM_DETAIL_SUCCESS,
 } from "../actionTypes";
 import history from "../../history";
 
@@ -54,7 +55,33 @@ const fetchAllRooms = () => async (dispatch) => {
     });
 };
 
+const fetchRoomById = (roomId) => async (dispatch) => {
+  await api
+    .get(`/api/room/${roomId}`)
+    .then((res) => {
+      const { data } = res.data;
+      dispatch({ type: FETCH_ROOM_DETAIL_SUCCESS, payload: data });
+    })
+    .catch((err) => {
+      console.log("Err", err);
+    });
+};
+
+const joinRoom = (data) => async (dispatch) => {
+  await api
+    .put(`/api/room`, data)
+    .then((res) => {
+      const { data } = res.data;
+      history.push(`/chat/${data.code}`);
+    })
+    .catch((err) => {
+      console.log("Err", err);
+    });
+};
+
 export const roomActions = {
   createRoom,
   fetchAllRooms,
+  fetchRoomById,
+  joinRoom,
 };

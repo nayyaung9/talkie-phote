@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const EventType = {
+  MESSAGE: 0,
+  JOIN: 1,
+  SERVER: 2,
+  TYPING: 3,
+};
+
 const chatSchema = new Schema(
   {
     message: {
@@ -8,15 +15,23 @@ const chatSchema = new Schema(
     },
     sender: {
       type: Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
+      default: null,
     },
     roomId: {
       type: String,
-    }
+    },
+    event_type: {
+      type: Number,
+      required: true,
+      default: EventType.MESSAGE,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("Chat", chatSchema);
+let Chat = mongoose.model("Chat", chatSchema);
+
+module.exports = { Chat, EventType };

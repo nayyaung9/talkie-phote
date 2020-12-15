@@ -25,7 +25,9 @@ code {
 .left {
   justify-content: flex-start !important;
 }
-
+.center {
+  justify-content: center !important;
+}
 #chat {
   max-height: calc(100vh - 128px);
   overflow-y: scroll; 

@@ -5,6 +5,8 @@ import JoinDialog from "../components/dialog/JoinDialog";
 import CreateDialog from "../components/dialog/CreateDialog";
 import RoomList from "../components/room/RoomList";
 import history from "../history";
+import { roomActions } from "../store/actions/room.action";
+import { useDispatch, useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -50,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ChatList = () => {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth.user);
+console.log(auth);
   const classes = useStyles();
   const [joinDialog, setJoinDialog] = useState(false);
   const [createDialog, setCreateDialog] = useState(false);
@@ -64,7 +69,11 @@ const ChatList = () => {
 
   const joinRoomById = (roomId) => {
     setJoinDialog(false);
-    history.push(`/chat/${roomId}`);
+    const payload = {
+      roomId,
+      user: auth._id ? auth._id : auth.id,
+    };
+    dispatch(roomActions.joinRoom(payload));
   };
 
   const openCreateDialog = () => {

@@ -1,6 +1,6 @@
 "use strict";
 
-const Chat = require("../models/Chat");
+const { Chat, EventType } = require("../models/Chat");
 
 exports.fetchAllMessages = async (req, res) => {
   await Chat.find()
@@ -17,6 +17,7 @@ exports.sendMessage = async (data, io) => {
       message,
       sender: sender._id,
       roomId,
+      event_type: EventType.MESSAGE,
     });
 
     await chat.save().then(async (result) => {

@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   title: {
-    display: "none",
     [theme.breakpoints.up("sm")]: {
       display: "block",
       paddingLeft: 8,
@@ -110,7 +109,7 @@ const useStyles = makeStyles((theme) => ({
 
 function AppWrapper(props) {
   const auth = useSelector((state) => state.auth);
-  const { window, children } = props;
+  const { window, children, roomName } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -302,7 +301,7 @@ function AppWrapper(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap className={classes.title}>
-            Talkie Phote
+            {roomName ? roomName : 'Talkie Phote'}
           </Typography>
           <div className={classes.spaceDrawer} />
 
