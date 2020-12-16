@@ -1,8 +1,8 @@
-const Room = require("../models/Room");
+const { Room } = require("../models/Room");
 const { Chat, EventType } = require("../models/Chat");
 
 exports.createRoom = async (req, res) => {
-  const { roomName, user: getAdminAsUser, admin } = req.body;
+  const { roomName, user: getAdminAsUser, admin, privacy } = req.body;
   let findRoom = await Room.findOne({ name: roomName });
 
   if (!findRoom) {
@@ -11,6 +11,7 @@ exports.createRoom = async (req, res) => {
         name: roomName,
         admin,
         users: getAdminAsUser,
+        privacy,
       });
 
       await room.save();
@@ -19,7 +20,7 @@ exports.createRoom = async (req, res) => {
         roomId: room.code,
         message: "created",
         event_type: EventType.SERVER,
-        sender: admin
+        sender: admin,
       });
       await createdMessage.save();
 
@@ -37,11 +38,10 @@ exports.createRoom = async (req, res) => {
 };
 
 exports.fetchAllRooms = async (req, res) => {
-  await Room.find()
+  await Room.find({ privacy: 0 })
     .populate("users", "-email -__v")
     .populate("admin", "-__v -email")
     .limit(100)
-    .sort({ createdAt: -1 })
     .then((data) => {
       return res.status(200).json({ status: true, data });
     })
@@ -87,9 +87,9 @@ exports.joinRoom = async (req, res) => {
           },
         },
         { new: true }
-      ).then(data => {
+      ).then((data) => {
         return res.status(200).json({ status: true, data });
-      })
+      });
     } catch (err) {
       return res.status(500).json({ status: true, data: err });
     }

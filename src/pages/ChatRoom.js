@@ -59,8 +59,8 @@ const ChatRoom = () => {
   const text = useRef("");
   const socketRef = useRef();
 
-  // const ENDPOINT = "https://api-talkie-phote.herokuapp.com";
-  const ENDPOINT = "http://localhost:8000";
+  const ENDPOINT = "https://api-talkie-phote.herokuapp.com";
+  // const ENDPOINT = "http://localhost:8000";
 
   const scrollToBottom = () => {
     const chat = document.getElementById("chat");
@@ -114,11 +114,39 @@ const ChatRoom = () => {
 
   // typing event
 
+  const [typing, setTyping] = useState({
+    typer: "",
+    status: "",
+    message: "",
+  });
+
   const handleKeyPress = (event) => {
     if (event) {
       socketRef.current.emit("typing", JSON.stringify(auth));
     }
   };
+
+  useEffect(() => {
+    socketRef.current.on("notifyTyping", (payload) => {
+      const { username, message } = payload;
+      setTyping({ ...typing, typer: username, message, status: true });
+    });
+  }, []);
+
+  const handleKeyup = (event) => {
+    if (event) {
+      socketRef.current.emit("stopTyping");
+    }
+  };
+
+  useEffect(() => {
+    // event://init-message
+    socketRef.current.on("notifyStopTyping", (message) => {
+      setTyping({ ...typing, status: false });
+    });
+  }, []);
+
+  // typing event
 
   return (
     <AppWrapper roomName={roomDetail && roomDetail.name}>
@@ -232,11 +260,20 @@ const ChatRoom = () => {
                     );
                   });
                 })}
+
+              {typing.status && (
+                <div className={classes.bubbleLeft}>
+                  <div>
+                    {typing.typer} {typing.message}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <MessageInput
             text={text}
             onSendMessage={onSendMessage}
+            handleKeyup={handleKeyup}
             handleKeyPress={handleKeyPress}
           />
         </Paper>

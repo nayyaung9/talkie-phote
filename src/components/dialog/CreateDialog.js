@@ -7,7 +7,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  InputLabel,
   Slide,
+  Select,
+  MenuItem,
+  FormControl,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { roomActions } from "../../store/actions/room.action";
@@ -20,6 +24,7 @@ export const roomFormValidation = Yup.object().shape({
     .min(3, "Room name must be at least 3 characters")
     .max(25, "Room name must be below 25 characters")
     .required("Room name is required"),
+  privacy: Yup.string().required("Please Select Room Privacy"),
 });
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -51,6 +56,7 @@ export default function CreateDialog({ createDialog, closeCreateDialog }) {
           <Formik
             initialValues={{
               roomName: "",
+              privacy: "",
             }}
             validationSchema={roomFormValidation}
             onSubmit={(values) => {
@@ -58,6 +64,7 @@ export default function CreateDialog({ createDialog, closeCreateDialog }) {
                 user: auth._id ? auth._id : auth.id,
                 admin: auth._id ? auth._id : auth.id,
                 roomName: values.roomName,
+                privacy: values.privacy,
               };
               dispatch(roomActions.createRoom(payload));
             }}
@@ -75,7 +82,7 @@ export default function CreateDialog({ createDialog, closeCreateDialog }) {
                   autoFocus
                   margin="dense"
                   id="roomName"
-                  label="Room Name"
+                  label="Room Name *"
                   type="text"
                   fullWidth
                   value={values.roomName}
@@ -84,6 +91,22 @@ export default function CreateDialog({ createDialog, closeCreateDialog }) {
                   helperText={touched.roomName ? errors.roomName : ""}
                   error={touched.roomName && Boolean(errors.roomName)}
                 />
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Room Privacy *</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="privacy"
+                    fullWidth
+                    value={values.privacy}
+                    onChange={handleChange("privacy")}
+                    onBlur={handleBlur}
+                    helperText={touched.roomName ? errors.roomName : ""}
+                    error={touched.roomName && Boolean(errors.roomName)}
+                  >
+                    <MenuItem value="0">Public</MenuItem>
+                    <MenuItem value="1">Private</MenuItem>
+                  </Select>
+                </FormControl>
               </form>
             )}
           </Formik>

@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 const ChatList = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth.user);
-console.log(auth);
+
   const classes = useStyles();
   const [joinDialog, setJoinDialog] = useState(false);
   const [createDialog, setCreateDialog] = useState(false);

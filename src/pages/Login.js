@@ -6,9 +6,10 @@ import {
   Grid,
   Typography,
   Divider,
+  CircularProgress,
 } from "@material-ui/core";
 import FacebookLogin from "react-facebook-login";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../store/actions/auth.action";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 const Login = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const loading = useSelector((state) => state.loading.loading);
 
   const responseFacebook = (response) => {
     const {
@@ -36,8 +38,6 @@ const Login = () => {
     dispatch(authActions.authenticate(payload));
   };
 
-  // console.log(process.env.REACT_APP_FACEBOOK_APPID);
-
   return (
     <div>
       <AuthHeader />
@@ -49,32 +49,41 @@ const Login = () => {
         style={{ minHeight: "80vh" }}
       >
         <Paper style={{ margin: 20, boxShadow: "none", textAlign: "center" }}>
-          <div className={classes.root}>
-            <div style={{ marginBottom: 20 }}>
-              <Typography
-                variant="h5"
-                color="textSecondary"
-                align="center"
-                gutterBottom
-              >
-                Talkie Phote Kya Mel
-              </Typography>
-              <FacebookLogin
-                appId="188832119556873"
-                fields="name,email,picture"
-                size="small"
-                disableMobileRedirect={true}
-                callback={responseFacebook}
-              />
+          {!loading ? (
+            <div className={classes.root}>
+              <div style={{ marginBottom: 20 }}>
+                <Typography
+                  variant="h5"
+                  color="textSecondary"
+                  align="center"
+                  gutterBottom
+                >
+                  Talkie Phote Kya Mel
+                </Typography>
+                <FacebookLogin
+                  appId="188832119556873"
+                  fields="name,email,picture"
+                  size="small"
+                  disableMobileRedirect={true}
+                  callback={responseFacebook}
+                />
+              </div>
+              <Divider />
+              <div style={{ marginTop: 20, width: 350 }}>
+                <Typography varaint="subtitle2" color="textSecondary">
+                  Please don't provide any information, like passwords and other
+                  personal information.
+                </Typography>
+              </div>
             </div>
-            <Divider />
-            <div style={{ marginTop: 20, width: 350 }}>
-              <Typography varaint="subtitle2" color="textSecondary">
-                Please don't provide any information, like passwords and other
-                personal information.
+          ) : (
+            <React.Fragment>
+              <CircularProgress />
+              <Typography style={{ paddingTop: 10 }}>
+                Please wait your request is being processed
               </Typography>
-            </div>
-          </div>
+            </React.Fragment>
+          )}
         </Paper>
       </Grid>
     </div>

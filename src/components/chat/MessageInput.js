@@ -52,7 +52,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MessageInput({ text, onSendMessage, handleKeyPress }) {
+export default function MessageInput({
+  text,
+  onSendMessage,
+  handleKeyup,
+  handleKeyPress,
+}) {
   const classes = useStyles();
 
   const addEmoji = (e) => {
@@ -79,6 +84,7 @@ export default function MessageInput({ text, onSendMessage, handleKeyPress }) {
                 input: classes.inputInput,
               }}
               onKeyPress={handleKeyPress}
+              onKeyUp={handleKeyup}
               multiline
               rowsMax={4}
               inputRef={text}
@@ -108,6 +114,7 @@ export default function MessageInput({ text, onSendMessage, handleKeyPress }) {
             color="primary"
             aria-label="send"
             type="submit"
+            disabled={!text.current.value}
             onClick={onSendMessage}
           >
             <SendIcon />
