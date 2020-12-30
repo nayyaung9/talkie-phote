@@ -30,9 +30,10 @@ const Login = () => {
       email,
       picture: { data },
     } = response;
+
     const payload = {
       fullname: name,
-      email,
+      email: email ? email : 'noemail@gmail.com',
       avatar_url: data?.url,
     };
     dispatch(authActions.authenticate(payload));
