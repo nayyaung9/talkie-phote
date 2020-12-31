@@ -1,0 +1,6 @@
+site/.next
+site/node_modules
+site/public
+templates
+node_modules
+functions

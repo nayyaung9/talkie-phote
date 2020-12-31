@@ -85,7 +85,7 @@ const ChatRoom = () => {
 
     // event://init-message
     socketRef.current.on("event://init-message", (message) => {
-      setItems((items) => [message]);
+      setItems(() => [message]);
       scrollToBottom();
     });
 
@@ -141,7 +141,7 @@ const ChatRoom = () => {
 
   useEffect(() => {
     // event://init-message
-    socketRef.current.on("notifyStopTyping", (message) => {
+    socketRef.current.on("notifyStopTyping", () => {
       setTyping({ ...typing, status: false });
     });
   }, []);
@@ -155,22 +155,18 @@ const ChatRoom = () => {
           <div className={classes.container}>
             <div id="chat">
               {items &&
-                items.map((data, i) => {
+                items.map((data) => {
                   return data.map((item, i) => {
                     return (
-                      <React.Fragment>
+                      <React.Fragment key={i}>
                         {item.event_type !== 0 ? (
-                          <div
-                            className={`${classes.bubbleContainer} center`}
-                            key={i}
-                          >
-                            {item?.event_type != 0 && (
+                          <div className={`${classes.bubbleContainer} center`}>
+                            {item?.event_type !== 0 && (
                               <div
                                 style={{
                                   display: "flex",
                                   flexDirection: "column",
-                                }}
-                              >
+                                }}>
                                 <Typography
                                   color="textSecondary"
                                   align="center"
@@ -178,11 +174,8 @@ const ChatRoom = () => {
                                   style={{
                                     fontSize: 12,
                                     fontWeight: 300,
-                                  }}
-                                >
-                                  {moment(item.createdAt).format(
-                                    "MMM DD, h:mm a"
-                                  )}
+                                  }}>
+                                  {moment(item.createdAt).format("MMM DD, h:mm a")}
                                 </Typography>
                                 <Typography
                                   component="span"
@@ -190,8 +183,7 @@ const ChatRoom = () => {
                                   style={{
                                     fontSize: 13,
                                     fontWeight: "bold",
-                                  }}
-                                >
+                                  }}>
                                   {item?.sender.fullname} {item?.message}{" "}
                                 </Typography>
                               </div>
@@ -202,8 +194,7 @@ const ChatRoom = () => {
                             className={`${classes.bubbleContainer} ${
                               item?.sender?._id === auth._id ? "right" : "left"
                             }`}
-                            key={i}
-                          >
+                            key={i}>
                             {item?.sender?._id !== auth._id && (
                               <Avatar src={item?.sender?.avatar_url} />
                             )}
@@ -211,10 +202,8 @@ const ChatRoom = () => {
                             <div
                               style={{
                                 marginLeft: 8,
-                                textAlign:
-                                  item?.sender?._id === auth._id && "right",
-                              }}
-                            >
+                                textAlign: item?.sender?._id === auth._id && "right",
+                              }}>
                               <div>
                                 <Typography
                                   component="span"
@@ -225,11 +214,8 @@ const ChatRoom = () => {
                                     paddingRight: 8,
                                     fontSize: 14,
                                     fontWeight: "bold",
-                                  }}
-                                >
-                                  {item?.sender?._id !== auth._id
-                                    ? item?.sender?.fullname
-                                    : "You"}
+                                  }}>
+                                  {item?.sender?._id !== auth._id ? item?.sender?.fullname : "You"}
                                 </Typography>
                                 <Typography
                                   component="span"
@@ -237,8 +223,7 @@ const ChatRoom = () => {
                                   style={{
                                     fontSize: 12,
                                     fontWeight: 300,
-                                  }}
-                                >
+                                  }}>
                                   {moment(item.createdAt).format("h:mm a")}
                                 </Typography>
                               </div>
@@ -249,8 +234,7 @@ const ChatRoom = () => {
                                   item?.sender?._id === auth._id
                                     ? classes.bubbleRight
                                     : classes.bubbleLeft
-                                }
-                              >
+                                }>
                                 <div>{item?.message}</div>
                               </div>
                             </div>
@@ -260,14 +244,14 @@ const ChatRoom = () => {
                     );
                   });
                 })}
-
+              {/* 
               {typing.status && (
                 <div className={classes.bubbleLeft}>
                   <div>
                     {typing.typer} {typing.message}
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
           <MessageInput

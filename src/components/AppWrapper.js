@@ -23,8 +23,6 @@ import {
 import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import MoreIcon from "@material-ui/icons/MoreVert";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useSelector } from "react-redux";
 
@@ -39,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
   },
   drawer: {
     flexShrink: 0,
@@ -65,12 +66,6 @@ const useStyles = makeStyles((theme) => ({
   spaceDrawer: {
     [theme.breakpoints.up("sm")]: {
       flex: 1,
-    },
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
-      display: "none",
     },
   },
   // necessary for content to be below app bar
@@ -107,6 +102,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * @param props
+ */
 function AppWrapper(props) {
   const auth = useSelector((state) => state.auth);
   const { window, children, roomName } = props;
@@ -121,7 +119,6 @@ function AppWrapper(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -168,8 +165,7 @@ function AppWrapper(props) {
       anchorEl={anchorEl}
       keepMounted
       open={Boolean(anchorEl)}
-      onClose={handleMenuClose}
-    >
+      onClose={handleMenuClose}>
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
     </StyledMenu>
@@ -184,8 +180,7 @@ function AppWrapper(props) {
       keepMounted
       transformOrigin={{ vertical: "top", horizontal: "right" }}
       open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
+      onClose={handleMobileMenuClose}>
       <MenuItem>
         <IconButton aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="secondary">
@@ -201,8 +196,7 @@ function AppWrapper(props) {
     {
       id: 1,
       primary: "Brunch this week?",
-      secondary:
-        "I'll be in the neighbourhood this week. Let's grab a bite to eat",
+      secondary: "I'll be in the neighbourhood this week. Let's grab a bite to eat",
       person: "/static/images/avatar/5.jpg",
     },
     {
@@ -215,8 +209,7 @@ function AppWrapper(props) {
     {
       id: 3,
       primary: "Recipe to try",
-      secondary:
-        "I am try out this new BBQ recipe, I think this might be amazing",
+      secondary: "I am try out this new BBQ recipe, I think this might be amazing",
       person: "/static/images/avatar/2.jpg",
     },
     {
@@ -228,8 +221,7 @@ function AppWrapper(props) {
     {
       id: 5,
       primary: "Doctor's Appointment",
-      secondary:
-        "My appointment for the doctor was rescheduled for next Saturday.",
+      secondary: "My appointment for the doctor was rescheduled for next Saturday.",
       person: "/static/images/avatar/4.jpg",
     },
     {
@@ -260,16 +252,8 @@ function AppWrapper(props) {
         <List className={classes.list}>
           {messages.map(({ id, primary, secondary, person }) => (
             <React.Fragment key={id}>
-              {id === 1 && (
-                <ListSubheader className={classes.subheader}>
-                  Today
-                </ListSubheader>
-              )}
-              {id === 3 && (
-                <ListSubheader className={classes.subheader}>
-                  Yesterday
-                </ListSubheader>
-              )}
+              {id === 1 && <ListSubheader className={classes.subheader}>Today</ListSubheader>}
+              {id === 3 && <ListSubheader className={classes.subheader}>Yesterday</ListSubheader>}
               <ListItem button>
                 <ListItemAvatar>
                   <Avatar alt="Profile Picture" src={person} />
@@ -283,8 +267,7 @@ function AppWrapper(props) {
     </div>
   );
 
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
+  const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
     <div className={classes.root}>
@@ -296,12 +279,11 @@ function AppWrapper(props) {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
+            className={classes.menuButton}>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap className={classes.title}>
-            {roomName ? roomName : 'Talkie Phote'}
+            {roomName ? roomName : "Talkie Phote"}
           </Typography>
           <div className={classes.spaceDrawer} />
 
@@ -311,16 +293,14 @@ function AppWrapper(props) {
               aria-label="show 4 new mails"
               color="textSecondary"
               variant="contained"
-              size="small"
-            >
+              size="small">
               Create Room
             </Button>
             <Button
               aria-label="show 4 new mails"
               color="textSecondary"
               variant="outlined"
-              size="small"
-            >
+              size="small">
               Join Room
             </Button>
             {auth.isAuth ? (
@@ -336,8 +316,7 @@ function AppWrapper(props) {
                 aria-controls={menuId}
                 aria-haspopup="true"
                 onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
+                color="inherit">
                 <AccountCircle />
               </IconButton>
             )}
@@ -356,8 +335,7 @@ function AppWrapper(props) {
                 aria-controls={mobileMenuId}
                 aria-haspopup="true"
                 onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
+                color="inherit">
                 <AccountCircle />
               </IconButton>
             )}
@@ -380,13 +358,11 @@ function AppWrapper(props) {
             }}
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
-            }}
-          >
+            }}>
             <div
               style={{
                 overflow: "auto",
-              }}
-            >
+              }}>
               {drawer}
             </div>
           </Drawer>
@@ -397,13 +373,11 @@ function AppWrapper(props) {
               paper: classes.drawerPaper,
             }}
             variant="permanent"
-            open
-          >
+            open>
             <div
               style={{
                 overflow: "auto",
-              }}
-            >
+              }}>
               {drawer}
             </div>
           </Drawer>

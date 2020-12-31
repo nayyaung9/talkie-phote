@@ -4,7 +4,6 @@ import { makeStyles, Paper, Grid, Button, Typography } from "@material-ui/core";
 import JoinDialog from "../components/dialog/JoinDialog";
 import CreateDialog from "../components/dialog/CreateDialog";
 import RoomList from "../components/room/RoomList";
-import history from "../history";
 import { roomActions } from "../store/actions/room.action";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -91,28 +90,17 @@ const ChatList = () => {
           <Paper style={{ margin: 20, boxShadow: "none", textAlign: "center" }}>
             <div className={classes.root}>
               <div style={{ marginBottom: 20 }}>
-                <Typography
-                  variant="h5"
-                  color="textSecondary"
-                  align="center"
-                  gutterBottom
-                >
+                <Typography variant="h5" color="textSecondary" align="center" gutterBottom>
                   Talkie Phote Kya Mal, Room Join Lite
                 </Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={12}>
-                    <Button
-                      className={classes.createButton}
-                      onClick={openCreateDialog}
-                    >
+                    <Button className={classes.createButton} onClick={openCreateDialog}>
                       Create a room
                     </Button>
                   </Grid>
                   <Grid item xs={12} sm={12}>
-                    <Button
-                      className={classes.joinButton}
-                      onClick={openJoinDialog}
-                    >
+                    <Button className={classes.joinButton} onClick={openJoinDialog}>
                       Join a room
                     </Button>
                   </Grid>
@@ -125,10 +113,7 @@ const ChatList = () => {
               closeJoinDialog={closeJoinDialog}
               joinRoomById={joinRoomById}
             />
-            <CreateDialog
-              createDialog={createDialog}
-              closeCreateDialog={closeCreateDialog}
-            />
+            <CreateDialog createDialog={createDialog} closeCreateDialog={closeCreateDialog} />
           </Paper>
         </Grid>
         <Paper className={classes.paper}>

@@ -1,13 +1,6 @@
 import React from "react";
 import AuthHeader from "../components/header/AuthHeader";
-import {
-  makeStyles,
-  Paper,
-  Grid,
-  Typography,
-  Divider,
-  CircularProgress,
-} from "@material-ui/core";
+import { makeStyles, Paper, Grid, Typography, Divider, CircularProgress } from "@material-ui/core";
 import FacebookLogin from "react-facebook-login";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../store/actions/auth.action";
@@ -30,13 +23,17 @@ const Login = () => {
       email,
       picture: { data },
     } = response;
-
+    console.log(response);
     const payload = {
       fullname: name,
-      email: email ? email : 'noemail@gmail.com',
+      email: email ? email : "noemail@gmail.com",
       avatar_url: data?.url,
     };
-    dispatch(authActions.authenticate(payload));
+    // dispatch(authActions.authenticate(payload));
+  };
+
+  const errorOnLogin = (e) => {
+    console.log("error", e);
   };
 
   return (
@@ -47,18 +44,12 @@ const Login = () => {
         spacing={0}
         alignItems="center"
         justify="center"
-        style={{ minHeight: "80vh" }}
-      >
+        style={{ minHeight: "80vh" }}>
         <Paper style={{ margin: 20, boxShadow: "none", textAlign: "center" }}>
           {!loading ? (
             <div className={classes.root}>
               <div style={{ marginBottom: 20 }}>
-                <Typography
-                  variant="h5"
-                  color="textSecondary"
-                  align="center"
-                  gutterBottom
-                >
+                <Typography variant="h5" color="textSecondary" align="center" gutterBottom>
                   Talkie Phote Kya Mel
                 </Typography>
                 <FacebookLogin
@@ -67,13 +58,14 @@ const Login = () => {
                   size="small"
                   disableMobileRedirect={true}
                   callback={responseFacebook}
+                  onFailure={errorOnLogin}
                 />
               </div>
               <Divider />
               <div style={{ marginTop: 20, width: 350 }}>
                 <Typography varaint="subtitle2" color="textSecondary">
-                  Please don't provide any information, like passwords and other
-                  personal information.
+                  Please don't provide any information, like passwords and other personal
+                  information.
                 </Typography>
               </div>
             </div>
