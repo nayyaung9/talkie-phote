@@ -1,6 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 @import url("https://mmwebfonts.comquas.com/fonts/?font=pyidaungsu");
 
+#root {
+  height: 100vh;
+}
 body,
 html {
   height: 100% !important;
@@ -29,7 +32,7 @@ code {
 #chat {
   max-height: calc(100vh - 128px);
   overflow-y: scroll;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
 }
 
 #chat::-webkit-scrollbar {

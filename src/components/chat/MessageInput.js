@@ -6,6 +6,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import SendIcon from "@material-ui/icons/Send";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import { Picker } from "emoji-mart";
+import PropTypes from "prop-types"; // ES6
 import "emoji-mart/css/emoji-mart.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -52,12 +53,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MessageInput({
-  text,
-  onSendMessage,
-  handleKeyup,
-  handleKeyPress,
-}) {
+/**
+ * Render Message Input Box
+ *
+ * @param  {object} props - Necessary data for message input
+ * @returns {HTMLElement} - Render Perfect message input box
+ */
+function MessageInput(props) {
+  const { text, onSendMessage, handleKeyup, handleKeyPress } = props;
   const classes = useStyles();
 
   const addEmoji = (e) => {
@@ -85,13 +88,17 @@ export default function MessageInput({
               }}
               onKeyPress={handleKeyPress}
               onKeyUp={handleKeyup}
+              onClick={() => setPicketMode(false)}
               multiline
               rowsMax={4}
               inputRef={text}
               inputProps={{ "aria-label": "search" }}
             />
 
-            <div>
+            <div
+              style={{
+                alignSelf: "flex-end",
+              }}>
               <IconButton onClick={() => setPicketMode(!pickerMode)}>
                 <InsertEmoticonIcon />
               </IconButton>
@@ -115,8 +122,7 @@ export default function MessageInput({
             aria-label="send"
             type="submit"
             disabled={!text.current.value}
-            onClick={onSendMessage}
-          >
+            onClick={onSendMessage}>
             <SendIcon />
           </IconButton>
         </Toolbar>
@@ -124,3 +130,12 @@ export default function MessageInput({
     </React.Fragment>
   );
 }
+
+MessageInput.propTypes = {
+  text: PropTypes.any,
+  onSendMessage: PropTypes.func,
+  handleKeyup: PropTypes.func,
+  handleKeyPress: PropTypes.func,
+};
+
+export default MessageInput;

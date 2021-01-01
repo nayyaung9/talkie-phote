@@ -25,7 +25,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useSelector } from "react-redux";
-
+import PropTypes from "prop-types"; // ES6
 const drawerWidth = 320;
 
 const useStyles = makeStyles((theme) => ({
@@ -103,11 +103,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 /**
- * @param props
+ * Render app wrapper component
+ *
+ * @param  {object} props - Necessary component props
+ * @returns {HTMLElement} - Render Perfect app wrapper component
  */
 function AppWrapper(props) {
   const auth = useSelector((state) => state.auth);
-  const { window, children, roomName } = props;
+  const { window, children } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -283,7 +286,7 @@ function AppWrapper(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap className={classes.title}>
-            {roomName ? roomName : "Talkie Phote"}
+            Talkie Phote
           </Typography>
           <div className={classes.spaceDrawer} />
 
@@ -390,5 +393,10 @@ function AppWrapper(props) {
     </div>
   );
 }
+
+AppWrapper.propTypes = {
+  window: PropTypes.instanceOf(window.constructor),
+  children: PropTypes.node,
+};
 
 export default AppWrapper;

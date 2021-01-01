@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Button,
   TextField,
@@ -15,7 +15,7 @@ import {
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { roomActions } from "../../store/actions/room.action";
-
+import PropTypes from "prop-types"; // ES6
 import * as Yup from "yup";
 import { Formik } from "formik";
 
@@ -31,7 +31,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CreateDialog({ createDialog, closeCreateDialog }) {
+/**
+ * Render room create dialog <CreateDialog />
+ *
+ * @param  {object} props - Specific method for dialog function
+ * @returns {HTMLDialogElement} - Render dialog that can create the room
+ */
+function CreateDialog(props) {
+  const { createDialog, closeCreateDialog } = props;
   const dispatch = useDispatch();
 
   const auth = useSelector((state) => state.auth.user);
@@ -44,11 +51,8 @@ export default function CreateDialog({ createDialog, closeCreateDialog }) {
         keepMounted
         onClose={closeCreateDialog}
         aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">
-          Create your Room
-        </DialogTitle>
+        aria-describedby="alert-dialog-slide-description">
+        <DialogTitle id="alert-dialog-slide-title">Create your Room</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             Have a fun with your friends?
@@ -67,19 +71,10 @@ export default function CreateDialog({ createDialog, closeCreateDialog }) {
                 privacy: values.privacy,
               };
               dispatch(roomActions.createRoom(payload));
-            }}
-          >
-            {({
-              handleSubmit,
-              handleChange,
-              handleBlur,
-              values,
-              errors,
-              touched,
-            }) => (
+            }}>
+            {({ handleSubmit, handleChange, handleBlur, values, errors, touched }) => (
               <form onSubmit={handleSubmit} id="roomForm">
                 <TextField
-                  autoFocus
                   margin="dense"
                   id="roomName"
                   label="Room Name *"
@@ -101,8 +96,7 @@ export default function CreateDialog({ createDialog, closeCreateDialog }) {
                     onChange={handleChange("privacy")}
                     onBlur={handleBlur}
                     helperText={touched.roomName ? errors.roomName : ""}
-                    error={touched.roomName && Boolean(errors.roomName)}
-                  >
+                    error={touched.roomName && Boolean(errors.roomName)}>
                     <MenuItem value="0">Public</MenuItem>
                     <MenuItem value="1">Private</MenuItem>
                   </Select>
@@ -123,3 +117,10 @@ export default function CreateDialog({ createDialog, closeCreateDialog }) {
     </div>
   );
 }
+
+CreateDialog.propTypes = {
+  createDialog: PropTypes.bool,
+  closeCreateDialog: PropTypes.func,
+};
+
+export default CreateDialog;

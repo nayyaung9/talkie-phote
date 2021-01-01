@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Router } from "react-router-dom";
 import AdminRoute from "./components/AdminRoute";
 
-// Pages
 import Login from "./pages/Login";
 import ChatList from "./pages/ChatList";
 import ChatRoom from "./pages/ChatRoom";

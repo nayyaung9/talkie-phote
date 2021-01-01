@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import AppWrapper from "../components/AppWrapper";
+import ChatDetailWrapper from "../components/ChatDetailWrapper";
 import { makeStyles, Paper, Avatar, Typography } from "@material-ui/core";
 import io from "socket.io-client";
 import { useSelector, useDispatch } from "react-redux";
@@ -149,7 +149,9 @@ const ChatRoom = () => {
   // typing event
 
   return (
-    <AppWrapper roomName={roomDetail && roomDetail.name}>
+    <ChatDetailWrapper
+      roomName={roomDetail && roomDetail.name}
+      roomId={roomDetail && roomDetail.code}>
       <div style={{ background: "#eff7fe", height: "100%" }}>
         <Paper className={classes.paper}>
           <div className={classes.container}>
@@ -262,7 +264,7 @@ const ChatRoom = () => {
           />
         </Paper>
       </div>
-    </AppWrapper>
+    </ChatDetailWrapper>
   );
 };
 

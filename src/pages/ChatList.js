@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import AppWrapper from "../components/AppWrapper";
 import { makeStyles, Paper, Grid, Button, Typography } from "@material-ui/core";
 import JoinDialog from "../components/dialog/JoinDialog";
 import CreateDialog from "../components/dialog/CreateDialog";
 import RoomList from "../components/room/RoomList";
 import { roomActions } from "../store/actions/room.action";
 import { useDispatch, useSelector } from "react-redux";
+import Layout from "../components/Layout";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   paper: {
-    padding: theme.spacing(2),
     boxShadow: "none",
   },
   joinButton: {
@@ -83,8 +82,12 @@ const ChatList = () => {
     setCreateDialog(false);
   };
 
+  const mobileTabActive = {
+    name: "chat",
+  };
+
   return (
-    <AppWrapper>
+    <Layout {...mobileTabActive}>
       <Paper className={classes.paper}>
         <Grid container spacing={0} alignItems="center" justify="center">
           <Paper style={{ margin: 20, boxShadow: "none", textAlign: "center" }}>
@@ -120,7 +123,7 @@ const ChatList = () => {
           <RoomList />
         </Paper>
       </Paper>
-    </AppWrapper>
+    </Layout>
   );
 };
 

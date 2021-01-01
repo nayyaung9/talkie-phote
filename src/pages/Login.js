@@ -21,15 +21,16 @@ const Login = () => {
     const {
       name,
       email,
+      userID,
       picture: { data },
     } = response;
-    console.log(response);
+
     const payload = {
       fullname: name,
-      email: email ? email : "noemail@gmail.com",
+      email: email ? email : userID,
       avatar_url: data?.url,
     };
-    // dispatch(authActions.authenticate(payload));
+    dispatch(authActions.authenticate(payload));
   };
 
   const errorOnLogin = (e) => {
@@ -52,9 +53,11 @@ const Login = () => {
                 <Typography variant="h5" color="textSecondary" align="center" gutterBottom>
                   Talkie Phote Kya Mel
                 </Typography>
+
                 <FacebookLogin
                   appId="188832119556873"
                   fields="name,email,picture"
+                  scope="public_profile"
                   size="small"
                   disableMobileRedirect={true}
                   callback={responseFacebook}
@@ -64,7 +67,7 @@ const Login = () => {
               <Divider />
               <div style={{ marginTop: 20, width: 350 }}>
                 <Typography varaint="subtitle2" color="textSecondary">
-                  Please don't provide any information, like passwords and other personal
+                  Please do not provide any information, like passwords and other personal
                   information.
                 </Typography>
               </div>
