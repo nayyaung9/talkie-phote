@@ -18,7 +18,6 @@ const createRoom = (data) => async (dispatch) => {
       dispatch(request(false));
       dispatch({
         type: ALERT_STATUS,
-        type: "success",
         text: "is create successfully",
       });
       history.push(`/chat/${data.code}`);
@@ -27,7 +26,6 @@ const createRoom = (data) => async (dispatch) => {
       dispatch(request(false));
       dispatch({
         type: ALERT_STATUS,
-        type: "success",
         text: err.response.data,
       });
     });
@@ -49,7 +47,6 @@ const fetchAllRooms = () => async (dispatch) => {
       dispatch(request(false));
       dispatch({
         type: ALERT_STATUS,
-        type: "success",
         text: err.response.data,
       });
     });
@@ -67,7 +64,7 @@ const fetchRoomById = (roomId) => async (dispatch) => {
     });
 };
 
-const joinRoom = (data) => async (dispatch) => {
+const joinRoom = (data) => async () => {
   await api
     .put(`/api/room`, data)
     .then((res) => {

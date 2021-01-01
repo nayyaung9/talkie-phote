@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   makeStyles,
   Grid,
@@ -7,13 +7,18 @@ import {
   IconButton,
   Avatar,
   Typography,
-  Button,
 } from "@material-ui/core";
+import JoinDialog from "../dialog/JoinDialog";
+import CreateDialog from "../dialog/CreateDialog";
 import ChatBubbleRoundedIcon from "@material-ui/icons/ChatBubbleRounded";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import NearMeIcon from "@material-ui/icons/NearMe";
 import PropTypes from "prop-types"; // ES6
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import history from "../../history";
+import { roomActions } from "../../store/actions/room.action";
 
 const useStyles = makeStyles((theme) => ({
   mobileAppBar: {
@@ -40,23 +45,71 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
   },
+  headerIconButton: {
+    background: "#e4e6eb !important",
+    marginLeft: theme.spacing(1),
+  },
 }));
 
 const MobileAppWrapper = ({ children, mobileTabActive }) => {
   const classes = useStyles();
-  const authUser = useSelector((state) => state.auth?.user);
+  const dispatch = useDispatch();
+
+  const auth = useSelector((state) => state.auth?.user);
+
+  const [joinDialog, setJoinDialog] = useState(false);
+  const [createDialog, setCreateDialog] = useState(false);
+
+  const openJoinDialog = () => {
+    setJoinDialog(true);
+  };
+
+  const closeJoinDialog = () => {
+    setJoinDialog(false);
+  };
+
+  const joinRoomById = (roomId) => {
+    setJoinDialog(false);
+    const payload = {
+      roomId,
+      user: auth._id ? auth._id : auth.id,
+    };
+    dispatch(roomActions.joinRoom(payload));
+  };
+
+  const openCreateDialog = () => {
+    setCreateDialog(true);
+  };
+
+  const closeCreateDialog = () => {
+    setCreateDialog(false);
+  };
+
   return (
     <React.Fragment>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <Avatar alt="Remy Sharp" src={authUser.avatar_url} className={classes.profileSrc} />
+          <Avatar alt="Remy Sharp" src={auth.avatar_url} className={classes.profileSrc} />
 
           <Typography variant="h6" className={classes.title}>
             Talkie Phote
           </Typography>
-          <Button color="inherit">Login</Button>
+          <IconButton edge="start" className={classes.headerIconButton} onClick={openJoinDialog}>
+            <NearMeIcon />
+          </IconButton>
+          <IconButton edge="start" className={classes.headerIconButton} onClick={openCreateDialog}>
+            <GroupAddIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
+
+      <JoinDialog
+        joinDialog={joinDialog}
+        closeJoinDialog={closeJoinDialog}
+        joinRoomById={joinRoomById}
+      />
+      <CreateDialog createDialog={createDialog} closeCreateDialog={closeCreateDialog} />
+
       <Toolbar />
       {children}
       <AppBar position="fixed" color="primary" className={classes.mobileAppBar}>
@@ -65,17 +118,33 @@ const MobileAppWrapper = ({ children, mobileTabActive }) => {
             <IconButton
               edge="start"
               classes={{ label: classes.iconButton }}
+              onClick={() => history.push("/chat")}
               style={{
-                color: mobileTabActive?.name === "chat" ? "rgb(72, 191, 131)" : "#ddd",
+                color:
+                  mobileTabActive?.name === "chat" ? "rgb(72, 191, 131)" : "rgba(0, 0, 0, 0.54)",
               }}>
               <ChatBubbleRoundedIcon />
               <Typography variant="body1">Chats</Typography>
             </IconButton>
-            <IconButton edge="start" classes={{ label: classes.iconButton }}>
+            <IconButton
+              edge="start"
+              classes={{ label: classes.iconButton }}
+              onClick={() => history.push("/rooms")}
+              style={{
+                color:
+                  mobileTabActive?.name === "room" ? "rgb(72, 191, 131)" : "rgba(0, 0, 0, 0.54)",
+              }}>
               <MeetingRoomIcon />
               <Typography variant="body1">Rooms</Typography>
             </IconButton>
-            <IconButton edge="start" classes={{ label: classes.iconButton }}>
+            <IconButton
+              edge="start"
+              classes={{ label: classes.iconButton }}
+              onClick={() => history.push("/me")}
+              style={{
+                color:
+                  mobileTabActive?.name === "profile" ? "rgb(72, 191, 131)" : "rgba(0, 0, 0, 0.54)",
+              }}>
               <AccountCircleIcon />
               <Typography variant="body1">Profile</Typography>
             </IconButton>

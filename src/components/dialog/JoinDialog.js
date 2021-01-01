@@ -9,16 +9,20 @@ import {
   DialogTitle,
   Slide,
 } from "@material-ui/core";
+import PropTypes from "prop-types"; // ES6
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+/**
+ * Render room create dialog <CreateDialog />
+ *
+ * @param  {object} props - Specific method for dialog function
+ * @returns {HTMLDialogElement} - Render dialog that can create the room
+ */
+function JoinDialog(props) {
+  const { joinDialog, joinRoomById, closeJoinDialog } = props;
 
-export default function JoinDialog({
-  joinDialog,
-  joinRoomById,
-  closeJoinDialog,
-}) {
   const [state, setState] = useState({
     name: "",
   });
@@ -30,17 +34,13 @@ export default function JoinDialog({
         keepMounted
         onClose={closeJoinDialog}
         aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">
-          Join Your Friend's Room
-        </DialogTitle>
+        aria-describedby="alert-dialog-slide-description">
+        <DialogTitle id="alert-dialog-slide-title">Join Your Friend&apos;s Room</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             အတင်းတုပ်ချင်လား? ကြွဖို့ room Id ရိုက်ထည့်လိုက်ပါ။
           </DialogContentText>
           <TextField
-            autoFocus
             margin="dense"
             id="name"
             label="Room Id"
@@ -62,3 +62,11 @@ export default function JoinDialog({
     </div>
   );
 }
+
+JoinDialog.propTypes = {
+  joinDialog: PropTypes.bool,
+  closeJoinDialog: PropTypes.func,
+  joinRoomById: PropTypes.func,
+};
+
+export default JoinDialog;
