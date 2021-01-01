@@ -27,4 +27,8 @@ module.exports = {
     "plugin:prettier/recommended",
     "plugin:json/recommended",
   ],
+  rules: {
+    "no-unused-vars": ["warn", { args: "none", argsIgnorePattern: "req|res|next|val" }],
+    "prettier/prettier": ["error"],
+  },
 };
