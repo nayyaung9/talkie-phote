@@ -4,6 +4,7 @@ import {
   ALERT_STATUS,
   FETCH_ROOMS_SUCCESS,
   FETCH_ROOM_DETAIL_SUCCESS,
+  FETCH_USER_JOINED_ROOM,
 } from "../actionTypes";
 import history from "../../history";
 
@@ -76,9 +77,22 @@ const joinRoom = (data) => async () => {
     });
 };
 
+const fetchUserJoinedRooms = (userId) => async (dispatch) => {
+  await api
+    .get(`/api/user/${userId}/rooms`)
+    .then((res) => {
+      const { data } = res.data;
+      dispatch({ type: FETCH_USER_JOINED_ROOM, payload: data });
+    })
+    .catch((err) => {
+      console.log("Err", err);
+    });
+};
+
 export const roomActions = {
   createRoom,
   fetchAllRooms,
   fetchRoomById,
   joinRoom,
+  fetchUserJoinedRooms,
 };

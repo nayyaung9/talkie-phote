@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 const RoomList = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const rooms = useSelector((state) => state.room.rooms);
+  const rooms = useSelector((state) => state.room.publicRooms);
 
   useEffect(() => {
     dispatch(roomActions.fetchAllRooms());

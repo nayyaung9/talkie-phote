@@ -20,7 +20,7 @@ const RoomSchema = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 RoomSchema.pre("save", async function (next) {

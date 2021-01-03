@@ -1,8 +1,13 @@
-import { FETCH_ROOMS_SUCCESS, FETCH_ROOM_DETAIL_SUCCESS } from "../actionTypes";
+import {
+  FETCH_ROOMS_SUCCESS,
+  FETCH_ROOM_DETAIL_SUCCESS,
+  FETCH_USER_JOINED_ROOM,
+} from "../actionTypes";
 
 const initialState = {
-  rooms: [],
+  publicRooms: [],
   room: {},
+  joinedRooms: [],
 };
 
 export function roomReducer(state = initialState, action) {
@@ -10,12 +15,17 @@ export function roomReducer(state = initialState, action) {
     case FETCH_ROOMS_SUCCESS:
       return {
         ...state,
-        rooms: action.payload,
+        publicRooms: action.payload,
       };
     case FETCH_ROOM_DETAIL_SUCCESS:
       return {
         ...state,
         room: action.payload,
+      };
+    case FETCH_USER_JOINED_ROOM:
+      return {
+        ...state,
+        joinedRooms: action.payload,
       };
     default:
       return state;

@@ -3,7 +3,6 @@ var express = require("express"),
   config = require("./config/db"),
   app = express(),
   server = require("http").Server(app),
-  Chat = require("./app/models/Chat"),
   chatController = require("./app/controllers/chat.controller"),
   io = require("socket.io")(server, {
     cors: {
@@ -28,9 +27,7 @@ if (mongoose.connection.readyState != 1) {
   mongoose.connect(config.db, options);
   db = mongoose.connection;
   db.on("error", (err) => {
-    throw new Error(
-      `Unable to connect to database at ${config.db} err, ${err}`
-    );
+    throw new Error(`Unable to connect to database at ${config.db} err, ${err}`);
   });
 
   db.once("open", function () {
@@ -40,10 +37,7 @@ if (mongoose.connection.readyState != 1) {
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Origin",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  res.header("Access-Control-Allow-Origin", "Origin, X-Requested-With, Content-Type, Accept");
   req.io = io;
   next();
 });

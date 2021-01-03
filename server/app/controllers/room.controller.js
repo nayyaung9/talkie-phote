@@ -26,14 +26,10 @@ exports.createRoom = async (req, res) => {
 
       return res.status(200).json({ status: true, data: room });
     } catch (err) {
-      return res
-        .status(500)
-        .json({ status: false, data: "Failed to create room" });
+      return res.status(500).json({ status: false, data: "Failed to create room" });
     }
   } else {
-    return res
-      .status(500)
-      .json({ status: false, data: "Room is already existed" });
+    return res.status(500).json({ status: false, data: "Room is already existed" });
   }
 };
 
@@ -86,7 +82,7 @@ exports.joinRoom = async (req, res) => {
             users: user,
           },
         },
-        { new: true }
+        { new: true },
       ).then((data) => {
         return res.status(200).json({ status: true, data });
       });
@@ -94,6 +90,22 @@ exports.joinRoom = async (req, res) => {
       return res.status(500).json({ status: true, data: err });
     }
   } else {
-    return res.status(500).json({ status: true, data: err });
+    return res.status(500).json({ status: true, data: "Room Not Found" });
   }
+};
+
+exports.fetchJoinedRoomByUser = async (req, res) => {
+  const { userId } = req.params;
+
+  await Room.find({
+    users: { $in: userId },
+  })
+    .populate("users", "-email -__v -updatedAt")
+    .populate("admin", "-email -__v -updatedAt")
+    .then((data) => {
+      return res.status(200).json({ status: true, data });
+    })
+    .catch((err) => {
+      return res.status(500).json({ status: true, data: err });
+    });
 };

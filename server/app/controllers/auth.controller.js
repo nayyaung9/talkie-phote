@@ -28,7 +28,7 @@ exports.authenticate = async (req, res) => {
           _id: user._id,
         },
         { $set: req.body },
-        { new: true }
+        { new: true },
       );
       return res.status(200).json({ success: true, data: existedUser });
     } catch (err) {
