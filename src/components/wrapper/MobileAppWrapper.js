@@ -89,7 +89,7 @@ const MobileAppWrapper = ({ children, mobileTabActive }) => {
     <React.Fragment>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <Avatar alt="Remy Sharp" src={auth.avatar_url} className={classes.profileSrc} />
+          <Avatar alt="Remy Sharp" src="/assets/image/appLogo.png" className={classes.profileSrc} />
 
           <Typography variant="h6" className={classes.title}>
             Talkie Phote

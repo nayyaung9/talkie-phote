@@ -96,7 +96,7 @@ const RoomDetail = () => {
               primary="See Group Members"
               secondary={
                 <AvatarGroup max={4}>
-                  {room?.users.map((member, i) => (
+                  {room?.users?.map((member, i) => (
                     <Avatar alt={member.fullname} src={member.avatar_url} key={i} />
                   ))}
                 </AvatarGroup>

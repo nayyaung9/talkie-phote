@@ -59,8 +59,8 @@ const ChatRoom = () => {
   const text = useRef("");
   const socketRef = useRef();
 
-  // const ENDPOINT = "https://api-talkie-phote.herokuapp.com";
-  const ENDPOINT = "http://localhost:8000";
+  const ENDPOINT = "https://api-talkie-phote.herokuapp.com";
+  // const ENDPOINT = "http://localhost:8000";
 
   const scrollToBottom = () => {
     const chat = document.getElementById("chat");
@@ -186,7 +186,7 @@ const ChatRoom = () => {
                                     fontSize: 13,
                                     fontWeight: "bold",
                                   }}>
-                                  {item?.sender.fullname} {item?.message}{" "}
+                                  {item?.sender?.fullname} {item?.message}{" "}
                                 </Typography>
                               </div>
                             )}

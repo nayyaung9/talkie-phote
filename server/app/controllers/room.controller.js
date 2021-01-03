@@ -109,3 +109,26 @@ exports.fetchJoinedRoomByUser = async (req, res) => {
       return res.status(500).json({ status: true, data: err });
     });
 };
+
+exports.leaveRoomByUserId = async (req, res) => {
+  const { userId, roomId } = req.params;
+  let getTargetedRoom = await Room.findOne({ code: roomId });
+
+  await getTargetedRoom
+    .update({ $pull: { users: { _id: userId } } })
+    .then(async () => {
+      let createdMessage = new Chat({
+        roomId: getTargetedRoom.code,
+        message: "leaved",
+        event_type: EventType.SERVER,
+        sender: userId,
+      });
+      await createdMessage.save();
+
+      return res.status(200).json({ status: true, data: "User leave" });
+    })
+    .catch((err) => {
+      console.log("Err leaveRoomByUserId", err);
+      return res.status(500).json({ status: true, data: err });
+    });
+};
