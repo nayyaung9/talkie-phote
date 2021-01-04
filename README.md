@@ -6,10 +6,10 @@
 
 ### User Joined Room List
 
-<img width="100%" height="700px" alt="Talkie Phote" src="https://talkie-phote.netlify.app/assets/image/chatlist_demo.jpg">
+<img width="100%" height="750px" alt="Talkie Phote" src="https://talkie-phote.netlify.app/assets/image/chatlist_demo.jpg">
 
 <div style="margin-bottom: 80px"></div>
 
 ### Active User List
 
-<img width="100%" height="700px" alt="Talkie Phote" src="https://talkie-phote.netlify.app/assets/image/activeUser__list.jpg">
+<img width="100%" height="750px" alt="Talkie Phote" src="https://talkie-phote.netlify.app/assets/image/activeUser__list.jpg">
