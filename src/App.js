@@ -10,9 +10,13 @@ import JoinedRoomList from "./pages/room/JoinedRoomList";
 import Profile from "./pages/profile/Profile";
 import history from "./history";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (
     <Router history={history}>
+      <ToastContainer />
       <Route exact path="/" component={Login} />
       <AdminRoute exact path="/chat">
         <JoinedRoomList />

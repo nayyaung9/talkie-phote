@@ -6,6 +6,10 @@ import JoinRoomItemList from "../../components/room/JoinRoomItemList";
 import { useDispatch, useSelector } from "react-redux";
 import { roomActions } from "../../store/actions/room.action";
 import { userActions } from "../../store/actions/user.action";
+import { geolocationActions } from "../../store/actions/geolocation.action";
+// get current location hook
+
+import useCurrentLocation from "../../hooks/useCurrentLocation";
 
 const mobileTabActive = {
   name: "chat",
@@ -13,13 +17,18 @@ const mobileTabActive = {
 
 const JoinedRoomList = () => {
   const dispatch = useDispatch();
-
+  let location = useCurrentLocation();
   const authUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    dispatch(roomActions.fetchUserJoinedRooms(authUser._id ? authUser._id : authUser.id));
+    const payload = {
+      userId: authUser._id ? authUser._id : authUser.id,
+      geolocation: location,
+    };
+    dispatch(roomActions.fetchUserJoinedRooms(payload.userId));
+    dispatch(geolocationActions.getCurrentPosition(payload));
     dispatch(userActions.fetchAllUsers());
-  }, []);
+  }, [location]);
 
   return (
     <Layout {...mobileTabActive}>

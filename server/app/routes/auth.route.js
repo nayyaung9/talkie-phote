@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const authController = require('../controllers/auth.controller');
-const { catchError } = require('../libs/errorHandler');
+const authController = require("../controllers/auth.controller");
+const { catchError } = require("../libs/errorHandler");
 
-module.exports = app => {
-  app.route('/api/authenticate').post(authController.authenticate);
+module.exports = (app) => {
+  app.route("/api/authenticate").post(authController.authenticate);
 };

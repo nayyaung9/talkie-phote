@@ -20,6 +20,14 @@ var UserSchema = new Schema(
       type: String,
       default: null,
     },
+    latitude: {
+      type: String,
+      default: null,
+    },
+    longitude: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
