@@ -26,7 +26,6 @@ const JoinedRoomList = () => {
       geolocation: location,
     };
     dispatch(roomActions.fetchUserJoinedRooms(payload.userId));
-    dispatch(geolocationActions.getCurrentPosition(payload));
     dispatch(userActions.fetchAllUsers());
   }, [location]);
 

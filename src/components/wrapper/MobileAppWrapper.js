@@ -15,6 +15,7 @@ import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import NearMeIcon from "@material-ui/icons/NearMe";
+import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 import PropTypes from "prop-types"; // ES6
 import { useSelector, useDispatch } from "react-redux";
 import history from "../../history";
@@ -136,6 +137,18 @@ const MobileAppWrapper = ({ children, mobileTabActive }) => {
               }}>
               <MeetingRoomIcon />
               <Typography variant="body1">Rooms</Typography>
+            </IconButton>
+
+            <IconButton
+              edge="start"
+              classes={{ label: classes.iconButton }}
+              onClick={() => history.push("/friends")}
+              style={{
+                color:
+                  mobileTabActive?.name === "friends" ? "rgb(72, 191, 131)" : "rgba(0, 0, 0, 0.54)",
+              }}>
+              <EmojiPeopleIcon />
+              <Typography variant="body1">Friends</Typography>
             </IconButton>
             <IconButton
               edge="start"
