@@ -1,7 +1,8 @@
-import { FETCH_USERS_SUCCESS } from "../actionTypes";
+import { FETCH_USERS_SUCCESS, FETCH_NEARBY_FRIENDS_LIST } from "../actionTypes";
 
 const initialState = {
   users: [],
+  nearByFriends: [],
 };
 
 export function userReducer(state = initialState, action) {
@@ -10,6 +11,11 @@ export function userReducer(state = initialState, action) {
       return {
         ...state,
         users: action.payload,
+      };
+    case FETCH_NEARBY_FRIENDS_LIST:
+      return {
+        ...state,
+        nearByFriends: action.payload,
       };
     default:
       return state;

@@ -41,7 +41,7 @@ const Profile = () => {
         const { latitude, longitude } = position.coords;
         const payload = {
           userId: user._id ? user._id : user.id,
-          geolocation: { latitude, longitude },
+          geolocation: [longitude, latitude],
         };
         dispatch(geolocationActions.getCurrentPosition(payload));
 

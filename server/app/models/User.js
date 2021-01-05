@@ -20,18 +20,17 @@ var UserSchema = new Schema(
       type: String,
       default: null,
     },
-    latitude: {
-      type: String,
-      default: null,
-    },
-    longitude: {
-      type: String,
-      default: null,
+    position: {
+      type: Schema.Types.Array,
+      ref: "Point",
     },
   },
+
   {
     timestamps: true,
   },
 );
+
+UserSchema.index({ position: `2dsphere` });
 
 module.exports = mongoose.model("User", UserSchema);
