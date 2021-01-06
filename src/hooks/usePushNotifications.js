@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import http from "./utils/http";
+import api from "../api";
 
 import {
   isPushNotificationSupported,
@@ -112,10 +112,11 @@ export default function usePushNotifications() {
   const onClickSendSubscriptionToPushServer = () => {
     setLoading(true);
     setError(false);
-    http
-      .post("/subscription", userSubscription)
+    api
+      .post("/api/subscription", userSubscription)
       .then(function (response) {
-        setPushServerSubscriptionId(response.id);
+        console.log(response);
+        setPushServerSubscriptionId(response.data.id);
         setLoading(false);
       })
       .catch((err) => {
@@ -130,7 +131,7 @@ export default function usePushNotifications() {
   const onClickSendNotification = async () => {
     setLoading(true);
     setError(false);
-    await http.get(`/subscription/${pushServerSubscriptionId}`).catch((err) => {
+    await api.get(`/api/subscription/${pushServerSubscriptionId}`).catch((err) => {
       setLoading(false);
       setError(err);
     });

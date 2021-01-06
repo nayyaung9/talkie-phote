@@ -14,7 +14,7 @@ function isPushNotificationSupported() {
 
 // ဒုတိယအဆင့်အနေနဲ့ service worker ကို register လုပ်မယ်။
 function registerServiceWorker() {
-  return navigator.serviceWorker.register("/sw.js");
+  return navigator.serviceWorker.register("/notification-sw.js");
 }
 
 // တတိယအဆင့်မှာ User ကို notification permission တောင်းရမယ်။
