@@ -61,7 +61,8 @@ const FindNearestFriends = () => {
       <div>
         <button onClick={() => onFindFriendsNearBy()}>find friends nearby</button>
         <Container style={{ marginTop: 40 }}>
-          {friends &&
+          {friends && friends.length > 0 ? (
+            friends &&
             friends.map((user, i) => (
               <div
                 style={{
@@ -84,7 +85,12 @@ const FindNearestFriends = () => {
                   {user.fullname}
                 </Typography>
               </div>
-            ))}
+            ))
+          ) : (
+            <Typography variat="h6" align="center">
+              No one was found near you :( FA{" "}
+            </Typography>
+          )}
         </Container>
       </div>
     </Layout>
