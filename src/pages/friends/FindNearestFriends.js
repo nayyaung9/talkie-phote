@@ -4,10 +4,12 @@ import {
   Avatar,
   Typography,
   Badge,
+  Button,
   List,
   ListItem,
   ListItemText,
   ListItemAvatar,
+  CircularProgress,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,6 +51,7 @@ const FindNearestFriends = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth.user);
   const friends = useSelector((state) => state.user.nearByFriends);
+  const loading = useSelector((state) => state.user.nearUserLoading);
   const currentUserPosition = auth?.position;
 
   useEffect(() => {
@@ -56,7 +59,6 @@ const FindNearestFriends = () => {
   }, []);
 
   const onFindFriendsNearBy = () => {
-    console.log("Find frineds");
     const payload = {
       userId: auth._id ? auth._id : auth.id,
     };
@@ -75,40 +77,59 @@ const FindNearestFriends = () => {
   return (
     <Layout {...mobileTabActive}>
       <div>
-        <button onClick={() => onFindFriendsNearBy()}>find friends nearby</button>
-        <div style={{ marginTop: 40 }}>
-          <List>
-            <div style={{ width: "40%", margin: "0 auto" }}>Within 5000 m testing</div>
-            {friends && friends.length > 0 ? (
-              friends &&
-              friends.map((user, i) => (
-                <ListItem key={i}>
-                  <ListItemAvatar>
-                    <StyledBadge
-                      overlap="circle"
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      variant="dot">
-                      <Avatar alt={user.fullname} src={user.avatar_url} key={i} />
-                    </StyledBadge>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={user.fullname}
-                    secondary={`${calculateTwoPoints(user.position, currentUserPosition, {
-                      units: "kilometers",
-                    })?.toFixed(0)} m`}
-                  />
-                </ListItem>
-              ))
-            ) : (
-              <Typography variat="h6" align="center">
-                No one was found near you :( FA{" "}
-              </Typography>
-            )}
-          </List>
-        </div>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => onFindFriendsNearBy()}
+          style={{ marginLeft: 20 }}>
+          find friends nearby
+        </Button>
+
+        {loading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 40,
+            }}>
+            <CircularProgress />
+          </div>
+        ) : (
+          <div style={{ marginTop: 40 }}>
+            <List>
+              <div style={{ width: "40%", margin: "0 auto" }}>Within 5000 m testing</div>
+              {friends && friends.length > 0 ? (
+                friends &&
+                friends.map((user, i) => (
+                  <ListItem key={i}>
+                    <ListItemAvatar>
+                      <StyledBadge
+                        overlap="circle"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        variant="dot">
+                        <Avatar alt={user.fullname} src={user.avatar_url} key={i} />
+                      </StyledBadge>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={user.fullname}
+                      secondary={`${calculateTwoPoints(user.position, currentUserPosition, {
+                        units: "kilometers",
+                      })?.toFixed(0)} m`}
+                    />
+                  </ListItem>
+                ))
+              ) : (
+                <Typography variat="h6" align="center">
+                  No one was found near you :( FA{" "}
+                </Typography>
+              )}
+            </List>
+          </div>
+        )}
       </div>
     </Layout>
   );
