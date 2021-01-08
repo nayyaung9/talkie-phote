@@ -2,17 +2,17 @@ const subscriptions = {};
 var crypto = require("crypto");
 const webpush = require("web-push");
 
-const vapidKeys = {
-  privateKey: "bdSiNzUhUP6piAxLH-tW88zfBlWWveIx0dAsDO66aVU",
-  publicKey:
-    "BIN2Jc5Vmkmy-S3AUrcMlpKxJpLeVRAfu9WBqUbJ70SJOCWGCGXKY-Xzyh7HDr6KbRDGYHjqZ06OcS3BjD7uAm8",
-};
+// const vapidKeys = {
+//   privateKey: "bdSiNzUhUP6piAxLH-tW88zfBlWWveIx0dAsDO66aVU",
+//   publicKey:
+//     "BIN2Jc5Vmkmy-S3AUrcMlpKxJpLeVRAfu9WBqUbJ70SJOCWGCGXKY-Xzyh7HDr6KbRDGYHjqZ06OcS3BjD7uAm8",
+// };
 
-webpush.setVapidDetails(
-  "mailto:nayyaung.developer@gmail.com",
-  vapidKeys.publicKey,
-  vapidKeys.privateKey,
-);
+// webpush.setVapidDetails(
+//   "mailto:nayyaung.developer@gmail.com",
+//   vapidKeys.publicKey,
+//   vapidKeys.privateKey,
+// );
 
 function createHash(input) {
   const md5sum = crypto.createHash("md5");
@@ -33,14 +33,25 @@ function sendPushNotification(req, res) {
   const pushSubscription = subscriptions[subscriptionId];
   console.log("pushSubscription", subscriptions);
 
+  const vapidKeys = {
+    privateKey: "bdSiNzUhUP6piAxLH-tW88zfBlWWveIx0dAsDO66aVU",
+    publicKey:
+      "BIN2Jc5Vmkmy-S3AUrcMlpKxJpLeVRAfu9WBqUbJ70SJOCWGCGXKY-Xzyh7HDr6KbRDGYHjqZ06OcS3BjD7uAm8",
+  };
+
+  webpush.setVapidDetails(
+    "mailto:nayyaung.developer@gmail.com",
+    vapidKeys.publicKey,
+    vapidKeys.privateKey,
+  );
+
   webpush
     .sendNotification(
       pushSubscription,
       JSON.stringify({
-        title: "New Product Available ",
-        text: "HEY! Take a look at this brand new t-shirt!",
+        title: "You have received a new message",
+        text: "Hyg..br loat ny dr lh? talkie-phote htl lrr kak ly",
         image: "/images/jason-leung-HM6TMmevbZQ-unsplash.jpg",
-        tag: "new-product",
         url: "/new-product-jason-leung-HM6TMmevbZQ-unsplash.html",
       }),
     )

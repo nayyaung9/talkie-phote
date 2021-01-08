@@ -53,7 +53,7 @@ exports.findNear = async (req, res) => {
           type: `Point`,
           coordinates: [user.position[0], user.position[1]],
         },
-        $maxDistance: 500,
+        $maxDistance: 5000,
         $minDistance: 0,
       },
     },
