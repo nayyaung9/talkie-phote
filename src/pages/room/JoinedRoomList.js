@@ -6,7 +6,6 @@ import JoinRoomItemList from "../../components/room/JoinRoomItemList";
 import { useDispatch, useSelector } from "react-redux";
 import { roomActions } from "../../store/actions/room.action";
 import { userActions } from "../../store/actions/user.action";
-// get current location hook
 
 const mobileTabActive = {
   name: "chat",

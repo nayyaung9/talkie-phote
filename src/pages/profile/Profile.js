@@ -34,8 +34,6 @@ const Profile = () => {
     onClickSendSubscriptionToPushServer,
     pushServerSubscriptionId,
     onClickSendNotification,
-    error,
-    loading,
   } = usePushNotifications();
 
   const classes = useStyles();
@@ -100,7 +98,7 @@ const Profile = () => {
           </Typography>
           <Switch
             name="location"
-            checked={state.location}
+            checked={state.notification}
             onChange={onClickAskUserPermission}
             inputProps={{ "aria-label": "secondary checkbox" }}
           />

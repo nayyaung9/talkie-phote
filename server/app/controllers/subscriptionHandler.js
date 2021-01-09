@@ -29,9 +29,7 @@ function handlePushNotificationSubscription(req, res) {
 
 function sendPushNotification(req, res) {
   const subscriptionId = req.params.id;
-  console.log("subscriptionId", subscriptionId);
   const pushSubscription = subscriptions[subscriptionId];
-  console.log("pushSubscription", subscriptions);
 
   const vapidKeys = {
     privateKey: "bdSiNzUhUP6piAxLH-tW88zfBlWWveIx0dAsDO66aVU",
@@ -50,9 +48,9 @@ function sendPushNotification(req, res) {
       pushSubscription,
       JSON.stringify({
         title: "You have received a new message",
-        text: "Hyg..br loat ny dr lh? talkie-phote htl lrr kak ly",
+        text: "Just Testing",
         image: "/images/jason-leung-HM6TMmevbZQ-unsplash.jpg",
-        url: "/new-product-jason-leung-HM6TMmevbZQ-unsplash.html",
+        url: `https://talkie-phote.netlify.app/chat`,
       }),
     )
     .catch((err) => {

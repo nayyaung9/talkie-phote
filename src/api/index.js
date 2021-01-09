@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "https://api-talkie-phote.herokuapp.com",
+  baseURL: "http://localhost:8000",
 });
 
 // https://api-talkie-phote.herokuapp.com
