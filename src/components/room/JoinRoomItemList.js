@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { roomActions } from "../../store/actions/room.action";
+import React from "react";
+import { useSelector } from "react-redux";
 import {
   makeStyles,
   Container,
@@ -9,12 +8,15 @@ import {
   Avatar,
   Divider,
   Hidden,
+  List,
+  ListItem,
+  ListItemText,
 } from "@material-ui/core";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
+import JoinRoomListSkeleton from "../elements/skeleton/JoinRoomListSkeleton";
 import history from "../../history";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import { useQuery } from "react-query";
+import api from "../../api";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -32,36 +34,31 @@ const useStyles = makeStyles((theme) => ({
 
 const JoinRoomItemList = () => {
   const classes = useStyles();
-  const dispatch = useDispatch();
-  const rooms = useSelector((state) => state.room.joinedRooms);
   const authUser = useSelector((state) => state.auth.user);
 
-  useEffect(() => {
-    dispatch(roomActions.fetchUserJoinedRooms(authUser._id ? authUser._id : authUser.id));
-  }, []);
+  function useFetchUserJoinedRooms() {
+    return useQuery("joinedRooms", async () => {
+      const res = await api.get(`/api/user/${authUser._id ? authUser._id : authUser.id}/rooms`);
+      return res.data;
+    });
+  }
+
+  const { status, data, error } = useFetchUserJoinedRooms();
 
   return (
     <Container className={classes.containerRoot}>
       <Grid container>
-        {rooms && rooms.length <= 0 ? (
-          <div
-            style={{
-              display: "table",
-              height: "80vh",
-              width: "100%",
-              textAlign: "center",
-            }}>
-            <Typography
-              style={{
-                display: "table-cell",
-                verticalAlign: "middle",
-              }}>
-              You dont have any conservation, please join room
-            </Typography>
-          </div>
+        {status === "loading" ? (
+          <Grid item xs={12} sm={3}>
+            <JoinRoomListSkeleton />
+            <JoinRoomListSkeleton />
+            <JoinRoomListSkeleton />
+          </Grid>
+        ) : status === "error" ? (
+          <span>Error: {error.message}</span>
         ) : (
-          rooms &&
-          rooms.map((room, i) => (
+          data &&
+          data.data.map((room, i) => (
             <Grid item xs={12} sm={3} key={i}>
               <List dense component="nav" className={classes.chatItem}>
                 <ListItem button onClick={() => history.push(`/chat/${room.code}`)}>

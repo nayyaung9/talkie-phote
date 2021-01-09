@@ -23,7 +23,7 @@ exports.sendMessage = async (data, io) => {
     await chat.save().then(async (result) => {
       await Chat.find({ roomId, _id: result._id })
         .populate("sender")
-        .then((data) => {
+        .then(async (data) => {
           io.in(roomId).emit("event://push-message", data);
         });
     });

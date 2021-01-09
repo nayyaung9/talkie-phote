@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Avatar, Typography, Badge } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../../store/actions/user.action";
+import useFetchUserList from "../../hooks/useFetchUserList";
+import HorizontalUserSkeleton from "../../components/elements/skeleton/HorizontalUserSkeleton";
 import "./user.css";
 
 const StyledBadge = withStyles((theme) => ({
@@ -35,13 +35,9 @@ const StyledBadge = withStyles((theme) => ({
 }))(Badge);
 
 const HorizontalUserList = () => {
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.user.users);
+  const { status, data, error } = useFetchUserList({ limit: 20 });
 
-  useEffect(() => {
-    dispatch(userActions.fetchAllUsers());
-  }, []);
-
+  console.log("data", data);
   return (
     <div
       className="activeUser__showList"
@@ -52,8 +48,18 @@ const HorizontalUserList = () => {
         textAlign: "center",
         padding: "20px 0",
       }}>
-      {users &&
-        users.map((user, i) => (
+      {" "}
+      {status === "loading" ? (
+        <>
+          <HorizontalUserSkeleton />
+          <HorizontalUserSkeleton />
+          <HorizontalUserSkeleton />
+        </>
+      ) : status === "error" ? (
+        <span>Error: {error.message}</span>
+      ) : (
+        data &&
+        data.data.map((user, i) => (
           <div
             key={i}
             style={{
@@ -78,7 +84,8 @@ const HorizontalUserList = () => {
               {user.fullname}
             </Typography>
           </div>
-        ))}
+        ))
+      )}
     </div>
   );
 };

@@ -3,7 +3,9 @@
 const User = require("../models/User");
 
 exports.fetchAllUsers = async (req, res) => {
+  const limit = parseInt(req.query.limit);
   await User.find()
+    .limit(limit)
     .then((data) => {
       return res.status(200).json({ status: true, data });
     })
