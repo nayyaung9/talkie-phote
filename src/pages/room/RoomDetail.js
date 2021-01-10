@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   makeStyles,
   Container,
@@ -10,6 +10,7 @@ import {
   Divider,
   ListItemIcon,
   Button,
+  Collapse,
   List,
   ListItem,
   ListItemText,
@@ -27,6 +28,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import moment from "moment";
 import { toast } from "react-toastify";
+
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +54,12 @@ const RoomDetail = () => {
   const { roomId } = useParams();
   const authUser = useSelector((state) => state.auth.user);
 
+  const [open, setOpen] = React.useState(true);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   const { status, data, error } = useQuery("roomDetail", async () => {
     const { data } = await api.get(`/api/room/${roomId}`);
     return data.data;
@@ -67,6 +77,17 @@ const RoomDetail = () => {
         progress: undefined,
       }),
     );
+  };
+
+  const renderRoomPrivacy = (code) => {
+    switch (code) {
+      case 0:
+        return "Public";
+      case 1:
+        return "Private";
+      default:
+        return code;
+    }
   };
 
   return (
@@ -111,12 +132,16 @@ const RoomDetail = () => {
                   Copy
                 </Button>
               </ListItem>
+              <ListItem>
+                <ListItemText primary="Room Privacy" secondary={renderRoomPrivacy(data?.privacy)} />
+              </ListItem>
               <ListItem button>
                 <ListItemIcon>
                   <PersonAddIcon />
                 </ListItemIcon>
                 <ListItemText primary="Invite Friends" />
               </ListItem>
+
               {authUser?._id === data?.admin._id && (
                 <ListItem button onClick={() => history.push(`/chat/${roomId}/info`)}>
                   <ListItemIcon>
@@ -127,27 +152,43 @@ const RoomDetail = () => {
               )}
 
               <Divider />
-              {data?.admin && (
-                <ListItem>
-                  <ListItemText
-                    primary="Admin"
-                    secondary={<Avatar alt={data?.admin.fullname} src={data?.admin.avatar_url} />}
-                  />
-                </ListItem>
-              )}
 
-              <ListItem button onClick={() => history.push(`/chat/${data.code}/users`)}>
+              <ListItem button onClick={handleClick}>
                 <ListItemText
-                  primary="See Group Members"
-                  secondary={
-                    <AvatarGroup max={4}>
-                      {data?.users?.map((member, i) => (
-                        <Avatar alt={member.fullname} src={member.avatar_url} key={i} />
-                      ))}
-                    </AvatarGroup>
-                  }
+                  primary={<Typography style={{ fontWeight: 800 }}>Chat Members Info</Typography>}
                 />
+                {open ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                <List>
+                  {data?.admin && (
+                    <ListItem>
+                      <ListItemText
+                        primary="Admin"
+                        secondary={
+                          <Avatar alt={data?.admin.fullname} src={data?.admin.avatar_url} />
+                        }
+                      />
+                    </ListItem>
+                  )}
+
+                  <ListItem button onClick={() => history.push(`/chat/${data.code}/users`)}>
+                    <ListItemText
+                      primary="See Group Members"
+                      secondary={
+                        <AvatarGroup max={4}>
+                          {data?.users?.map((member, i) => (
+                            <Avatar alt={member.fullname} src={member.avatar_url} key={i} />
+                          ))}
+                        </AvatarGroup>
+                      }
+                    />
+                  </ListItem>
+                </List>
+              </Collapse>
+
+              <Divider />
+
               <ListItem>
                 <ListItemText
                   primary="Room Created Date"
