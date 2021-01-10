@@ -43,18 +43,27 @@ exports.fetchAllRooms = async (req, res) => {
 
 exports.updateRoomName = async (req, res) => {
   const { id } = req.params;
-  console.log(req.body, req.params);
+  const { roomName, privacy, admin } = req.body;
+
   await Room.findOneAndUpdate(
     { code: id },
     {
       $set: {
-        name: req.body.roomName,
-        privacy: req.body.privacy,
+        name: roomName,
+        privacy,
       },
     },
     { new: true },
   )
-    .then((data) => {
+    .then(async (data) => {
+      let createdMessage = new Chat({
+        roomId: id,
+        message: "updated room",
+        event_type: EventType.SERVER,
+        sender: admin,
+      });
+      await createdMessage.save();
+
       return res.status(200).json({ status: true, data });
     })
     .catch((err) => {

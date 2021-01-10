@@ -15,12 +15,13 @@ import {
 } from "@material-ui/core";
 import history from "../../history";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import useRoomHook from "../../hooks/useRoomHook";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { roomActions } from "../../store/actions/room.action";
+import { useQuery } from "react-query";
+import api from "../../api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +52,15 @@ const RoomInfoSetting = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const { roomId } = useParams();
-  const { status, data, error } = useRoomHook(roomId);
+
+  const { status, data, error } = useQuery("roomInfo", async () => {
+    const { data } = await api.get(`/api/room/${roomId}`);
+    return data.data;
+  });
+
+  console.log("status", status);
+  const auth = useSelector((state) => state.auth.user);
+
   return (
     <div>
       <AppBar position="static" className={classes.appBar}>
@@ -86,6 +95,7 @@ const RoomInfoSetting = () => {
                 id: values.id,
                 roomName: values.roomName,
                 privacy: values.privacy,
+                admin: auth._id ? auth._id : auth.id,
               };
 
               dispatch(roomActions.updateRoomInfo(payload));
