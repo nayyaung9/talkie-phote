@@ -3,6 +3,7 @@ import Layout from "../../components/Layout";
 import { makeStyles, Typography, Container, Switch } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { geolocationActions } from "../../store/actions/geolocation.action";
+import usePushNotifications from "../../hooks/usePushNotifications";
 
 const useStyles = makeStyles((theme) => ({
   profileSrc: {
@@ -24,12 +25,25 @@ const mobileTabActive = {
 
 const Profile = () => {
   const dispatch = useDispatch();
+  const {
+    userConsent,
+    pushNotificationSupported,
+    userSubscription,
+    onClickAskUserPermission,
+    onClickSusbribeToPushNotification,
+    onClickSendSubscriptionToPushServer,
+    pushServerSubscriptionId,
+    onClickSendNotification,
+  } = usePushNotifications();
 
   const classes = useStyles();
   const user = useSelector((state) => state.auth.user);
 
+  const isConsentGranted = userConsent === "granted";
+
   const [state, setState] = React.useState({
     location: false,
+    notification: isConsentGranted,
   });
 
   const handleChange = () => {
@@ -41,7 +55,7 @@ const Profile = () => {
         const { latitude, longitude } = position.coords;
         const payload = {
           userId: user._id ? user._id : user.id,
-          geolocation: { latitude, longitude },
+          geolocation: [longitude, latitude],
         };
         dispatch(geolocationActions.getCurrentPosition(payload));
 
@@ -77,6 +91,39 @@ const Profile = () => {
             inputProps={{ "aria-label": "secondary checkbox" }}
           />
         </div>
+
+        <div className={classes.rootRow}>
+          <Typography variant="body1" style={{ fontWeight: 800, color: "#333" }}>
+            Notification
+          </Typography>
+          <Switch
+            name="location"
+            checked={state.notification}
+            onChange={onClickAskUserPermission}
+            inputProps={{ "aria-label": "secondary checkbox" }}
+          />
+        </div>
+
+        <button
+          disabled={!pushNotificationSupported || !isConsentGranted || userSubscription}
+          onClick={onClickSusbribeToPushNotification}>
+          {userSubscription ? "Push subscription created" : "Create Notification subscription"}
+        </button>
+
+        <button
+          disabled={!userSubscription || pushServerSubscriptionId}
+          onClick={onClickSendSubscriptionToPushServer}>
+          {pushServerSubscriptionId
+            ? "Subscrption sent to the server"
+            : "Send subscription to push server"}
+        </button>
+
+        {pushServerSubscriptionId && (
+          <div>
+            <p>The server accepted the push subscrption!</p>
+            <button onClick={onClickSendNotification}>Send a notification</button>
+          </div>
+        )}
       </Container>
     </Layout>
   );
