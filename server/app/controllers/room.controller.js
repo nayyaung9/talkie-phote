@@ -3,33 +3,28 @@ const { Chat, EventType } = require("../models/Chat");
 
 exports.createRoom = async (req, res) => {
   const { roomName, user: getAdminAsUser, admin, privacy } = req.body;
-  let findRoom = await Room.findOne({ name: roomName });
 
-  if (!findRoom) {
-    try {
-      let room = new Room({
-        name: roomName,
-        admin,
-        users: getAdminAsUser,
-        privacy,
-      });
+  try {
+    let room = new Room({
+      name: roomName,
+      admin,
+      users: getAdminAsUser,
+      privacy,
+    });
 
-      await room.save();
+    await room.save();
 
-      let createdMessage = new Chat({
-        roomId: room.code,
-        message: "created",
-        event_type: EventType.SERVER,
-        sender: admin,
-      });
-      await createdMessage.save();
+    let createdMessage = new Chat({
+      roomId: room.code,
+      message: "created",
+      event_type: EventType.SERVER,
+      sender: admin,
+    });
+    await createdMessage.save();
 
-      return res.status(200).json({ status: true, data: room });
-    } catch (err) {
-      return res.status(500).json({ status: false, data: "Failed to create room" });
-    }
-  } else {
-    return res.status(500).json({ status: false, data: "Room is already existed" });
+    return res.status(200).json({ status: true, data: room });
+  } catch (err) {
+    return res.status(500).json({ status: false, data: "Failed to create room" });
   }
 };
 

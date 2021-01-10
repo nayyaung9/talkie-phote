@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import PublicRoomList from "./pages/room/PublicRoomList";
 import ChatRoom from "./pages/ChatRoom";
 import RoomDetail from "./pages/room/RoomDetail";
+import RoomInfoSetting from "./pages/room/RoomInfoSetting";
 import JoinedRoomList from "./pages/room/JoinedRoomList";
 import Profile from "./pages/profile/Profile";
 import FindNearestFriends from "./pages/friends/FindNearestFriends";
@@ -34,6 +35,9 @@ function App() {
         </AdminRoute>
         <AdminRoute exact path="/chat/:roomId/setting">
           <RoomDetail />
+        </AdminRoute>
+        <AdminRoute exact path="/chat/:roomId/info">
+          <RoomInfoSetting />
         </AdminRoute>
         <AdminRoute exact path="/friends">
           <FindNearestFriends />

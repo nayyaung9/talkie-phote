@@ -48,7 +48,6 @@ const HorizontalUserList = () => {
         textAlign: "center",
         padding: "20px 0",
       }}>
-      {" "}
       {status === "loading" ? (
         <>
           <HorizontalUserSkeleton />

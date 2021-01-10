@@ -7,6 +7,7 @@ import {
   IconButton,
   Typography,
   Avatar,
+  Divider,
   ListItemIcon,
 } from "@material-ui/core";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
@@ -21,6 +22,7 @@ import { useParams } from "react-router-dom";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import EditIcon from "@material-ui/icons/Edit";
 import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
@@ -83,6 +85,13 @@ const RoomDetail = () => {
           <ListItem button>
             <ListItemText primary="Room Id" secondary={room?.code} />
           </ListItem>
+          <ListItem button onClick={() => history.push(`/chat/${roomId}/info`)}>
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            <ListItemText primary="Edit Room Info" />
+          </ListItem>
+          <Divider />
           {room?.admin && (
             <ListItem>
               <ListItemText
@@ -91,6 +100,7 @@ const RoomDetail = () => {
               />
             </ListItem>
           )}
+
           <ListItem button>
             <ListItemText
               primary="See Group Members"
