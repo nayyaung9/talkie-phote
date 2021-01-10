@@ -77,6 +77,17 @@ const joinRoom = (data) => async () => {
     });
 };
 
+const updateRoomInfo = (data) => async () => {
+  await api
+    .put(`/api/room/${data.id}/update`, data)
+    .then((res) => {
+      const { data } = res.data;
+      history.push(`/chat/${data.code}`);
+    })
+    .catch((err) => {
+      console.log("Err", err);
+    });
+};
 const fetchUserJoinedRooms = (userId) => async (dispatch) => {
   await api
     .get(`/api/user/${userId}/rooms`)
@@ -94,5 +105,6 @@ export const roomActions = {
   fetchAllRooms,
   fetchRoomById,
   joinRoom,
+  updateRoomInfo,
   fetchUserJoinedRooms,
 };

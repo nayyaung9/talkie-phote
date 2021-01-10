@@ -4,6 +4,7 @@ import { makeStyles, Paper, Grid, Typography, Divider, CircularProgress } from "
 import FacebookLogin from "react-facebook-login";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../store/actions/auth.action";
+import history from "../history";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,7 +17,13 @@ const Login = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const loading = useSelector((state) => state.loading.loading);
+  const isAuth = useSelector((state) => state.auth.isAuth);
 
+  React.useEffect(() => {
+    if (isAuth) {
+      history.push("/chat");
+    }
+  }, [isAuth]);
   const responseFacebook = (response) => {
     const {
       name,

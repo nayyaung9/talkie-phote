@@ -8,6 +8,7 @@ module.exports = (app) => {
   app.route("/api/rooms").get(catchError(roomController.fetchAllRooms));
 
   app.route("/api/room/:id").get(catchError(roomController.fetchRoomById));
+  app.route("/api/room/:id/update").put(catchError(roomController.updateRoomName));
 
   app.route("/api/room").put(catchError(roomController.joinRoom));
 

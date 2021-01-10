@@ -1,8 +1,7 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import { Avatar, Typography, Badge } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import useFetchUserList from "../../hooks/useFetchUserList";
-import HorizontalUserSkeleton from "../../components/elements/skeleton/HorizontalUserSkeleton";
 import "./user.css";
 
 const StyledBadge = withStyles((theme) => ({
@@ -34,58 +33,25 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge);
 
-const HorizontalUserList = () => {
-  const { status, data, error } = useFetchUserList({ limit: 20 });
-
-  console.log("data", data);
+const HorizontalUserList = ({ user }) => {
   return (
     <div
-      className="activeUser__showList"
       style={{
-        display: "flex",
-        flexWrap: "nowrap",
-        overflowX: "auto",
-        textAlign: "center",
-        padding: "20px 0",
+        flex: "0 0 auto",
+        padding: "0 8px 0 8px",
       }}>
-      {" "}
-      {status === "loading" ? (
-        <>
-          <HorizontalUserSkeleton />
-          <HorizontalUserSkeleton />
-          <HorizontalUserSkeleton />
-        </>
-      ) : status === "error" ? (
-        <span>Error: {error.message}</span>
-      ) : (
-        data &&
-        data.data.map((user, i) => (
-          <div
-            key={i}
-            style={{
-              flex: "0 0 auto",
-              padding: "0 8px 0 8px",
-            }}>
-            <StyledBadge
-              overlap="circle"
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              variant="dot">
-              <Avatar
-                alt={user.fullname}
-                style={{ margin: "0 auto" }}
-                src={user.avatar_url}
-                key={i}
-              />
-            </StyledBadge>
-            <Typography color="inherit" component="span" className="activeUser__name">
-              {user.fullname}
-            </Typography>
-          </div>
-        ))
-      )}
+      <StyledBadge
+        overlap="circle"
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        variant="dot">
+        <Avatar alt={user?.fullname} style={{ margin: "0 auto" }} src={user?.avatar_url} />
+      </StyledBadge>
+      <Typography color="inherit" component="span" className="activeUser__name">
+        {user?.fullname}
+      </Typography>
     </div>
   );
 };
