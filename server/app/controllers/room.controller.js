@@ -41,6 +41,27 @@ exports.fetchAllRooms = async (req, res) => {
     });
 };
 
+exports.updateRoomName = async (req, res) => {
+  const { id } = req.params;
+  console.log(req.body, req.params);
+  await Room.findOneAndUpdate(
+    { code: id },
+    {
+      $set: {
+        name: req.body.roomName,
+        privacy: req.body.privacy,
+      },
+    },
+    { new: true },
+  )
+    .then((data) => {
+      return res.status(200).json({ status: true, data });
+    })
+    .catch((err) => {
+      return res.status(500).json({ status: false, data: err.message });
+    });
+};
+
 exports.fetchRoomById = async (req, res) => {
   const { id } = req.params;
 

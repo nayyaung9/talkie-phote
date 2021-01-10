@@ -7,12 +7,20 @@ import {
   IconButton,
   Typography,
   TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Button,
 } from "@material-ui/core";
 import history from "../../history";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import useRoomHook from "../../hooks/useRoomHook";
 import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import * as Yup from "yup";
+import { Formik } from "formik";
+import { useDispatch } from "react-redux";
+import { roomActions } from "../../store/actions/room.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,16 +39,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export const roomFormValidation = Yup.object().shape({
+  roomName: Yup.string()
+    .min(3, "Room name must be at least 3 characters")
+    .max(25, "Room name must be below 25 characters")
+    .required("Room name is required"),
+  privacy: Yup.string().required("Please Select Room Privacy"),
+});
+
 const RoomInfoSetting = () => {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const { roomId } = useParams();
-  // const { status, data, error } = useRoomHook(roomId);
-
-  const { status, data, error } = useQuery("todos", () => fetch(`/api/room/${roomId}`), {
-    roomName: "",
-  });
-
-  console.log("data", data);
+  const { status, data, error } = useRoomHook(roomId);
   return (
     <div>
       <AppBar position="static" className={classes.appBar}>
@@ -63,9 +74,67 @@ const RoomInfoSetting = () => {
         ) : status === "error" ? (
           <span>Error: {error.message}</span>
         ) : (
-          <div>
-            <TextField value={data.name} variant="outlined" size="small" fullWidth />
-          </div>
+          <Formik
+            initialValues={{
+              roomName: data?.name,
+              privacy: data?.privacy,
+              id: data?.code,
+            }}
+            validationSchema={roomFormValidation}
+            onSubmit={(values) => {
+              const payload = {
+                id: values.id,
+                roomName: values.roomName,
+                privacy: values.privacy,
+              };
+
+              dispatch(roomActions.updateRoomInfo(payload));
+            }}>
+            {({ handleSubmit, handleChange, handleBlur, values, errors, touched }) => (
+              <form onSubmit={handleSubmit} id="roomForm">
+                <TextField
+                  margin="dense"
+                  id="roomName"
+                  variant="outlined"
+                  label="Room Name *"
+                  type="text"
+                  fullWidth
+                  value={values.roomName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  style={{ marginBottom: 20 }}
+                  helperText={touched.roomName ? errors.roomName : ""}
+                  error={touched.roomName && Boolean(errors.roomName)}
+                />
+
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Room Privacy *</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="privacy"
+                    fullWidth
+                    value={values.privacy}
+                    onChange={handleChange("privacy")}
+                    onBlur={handleBlur}
+                    helperText={touched.roomName ? errors.roomName : ""}
+                    error={touched.roomName && Boolean(errors.roomName)}>
+                    <MenuItem value="0">Public</MenuItem>
+                    <MenuItem value="1">Private</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <Button
+                  style={{ marginTop: 20 }}
+                  fullWidth
+                  type="submit"
+                  variant="outlined"
+                  size="small"
+                  color="primary">
+                  Submit
+                </Button>
+              </form>
+            )}
+          </Formik>
         )}
       </Container>
     </div>

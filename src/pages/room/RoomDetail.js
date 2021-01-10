@@ -9,6 +9,7 @@ import {
   Avatar,
   Divider,
   ListItemIcon,
+  Button,
 } from "@material-ui/core";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -23,7 +24,9 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import EditIcon from "@material-ui/icons/Edit";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,10 +50,25 @@ const RoomDetail = () => {
   const dispatch = useDispatch();
   const { roomId } = useParams();
   const room = useSelector((state) => state.room.room);
+  const authUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(roomActions.fetchRoomById(roomId));
   }, [roomId]);
+
+  const onCopyRoomId = (roomId) => {
+    return navigator.clipboard.writeText(roomId).then(() =>
+      toast.info("Copied Room Id", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      }),
+    );
+  };
 
   return (
     <div className={classes.root}>
@@ -82,15 +100,27 @@ const RoomDetail = () => {
       </div>
       <Container>
         <List>
-          <ListItem button>
+          <ListItem>
             <ListItemText primary="Room Id" secondary={room?.code} />
+            <Button variant="outlined" color="primary" onClick={() => onCopyRoomId(room?.code)}>
+              Copy
+            </Button>
           </ListItem>
-          <ListItem button onClick={() => history.push(`/chat/${roomId}/info`)}>
+          <ListItem button>
             <ListItemIcon>
-              <EditIcon />
+              <PersonAddIcon />
             </ListItemIcon>
-            <ListItemText primary="Edit Room Info" />
+            <ListItemText primary="Invite Friends" />
           </ListItem>
+          {authUser?._id === room?.admin._id && (
+            <ListItem button onClick={() => history.push(`/chat/${roomId}/info`)}>
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              <ListItemText primary="Edit Room Info" />
+            </ListItem>
+          )}
+
           <Divider />
           {room?.admin && (
             <ListItem>
