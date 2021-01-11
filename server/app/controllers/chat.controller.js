@@ -1,6 +1,7 @@
 "use strict";
 
 const { Chat, EventType } = require("../models/Chat");
+var FCM = require("fcm-node");
 
 exports.fetchAllMessages = async (req, res) => {
   await Chat.find()
@@ -12,6 +13,21 @@ exports.fetchAllMessages = async (req, res) => {
 
 exports.sendMessage = async (data, io) => {
   const { message, roomId, sender } = data;
+
+  var serverKey =
+    "AAAAnkUgEbM:APA91bGgOiGaDcLFmsURPYh7OyjV1bCkE_YOXoORbJYebqK3Z8hSDsB1hy99aDqSuFkTA46-tDczI3Je02RZOrSN98L9ohm7FUzKZyCZDS8l6MTrD0LMAOr1GubKnaW9EXUY65bxY7Cm"; // put your server key here
+  var fcm = new FCM(serverKey);
+
+  var fcmMessage = {
+    //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+    to: data.token,
+
+    notification: {
+      title: "You have received a new message",
+      body: message,
+    },
+  };
+
   try {
     let chat = new Chat({
       message,
@@ -24,6 +40,13 @@ exports.sendMessage = async (data, io) => {
       await Chat.find({ roomId, _id: result._id })
         .populate("sender")
         .then(async (data) => {
+          fcm.send(fcmMessage, function (err, response) {
+            if (err) {
+              console.log("Something has gone wrong!");
+            } else {
+              console.log("Successfully sent with response: ", response);
+            }
+          });
           io.in(roomId).emit("event://push-message", data);
         });
     });
