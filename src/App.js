@@ -14,6 +14,9 @@ import Profile from "./pages/profile/Profile";
 import FindNearestFriends from "./pages/friends/FindNearestFriends";
 import history from "./history";
 
+// test
+import NotiPage from "./pages/NotiPage";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -25,6 +28,7 @@ function App() {
       <Router history={history}>
         <ToastContainer />
         <Route exact path="/" component={Login} />
+        <Route path="/noti" component={NotiPage} />
         <AdminRoute exact path="/chat">
           <JoinedRoomList />
         </AdminRoute>

@@ -63,7 +63,7 @@ const Login = () => {
 
                 <FacebookLogin
                   appId="188832119556873"
-                  fields="name,email,picture"
+                  fields="name,email,picture.type(large)"
                   scope="public_profile"
                   size="small"
                   disableMobileRedirect={true}

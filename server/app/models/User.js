@@ -24,6 +24,10 @@ var UserSchema = new Schema(
       type: Schema.Types.Array,
       ref: "Point",
     },
+    deviceToken: {
+      type: "String",
+      default: null,
+    },
   },
 
   {

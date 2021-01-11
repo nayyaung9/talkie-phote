@@ -28,7 +28,21 @@ const fetchUserDetail = (id) => async (dispatch) => {
     });
 };
 
+const addUserDeviceTokenForPushNotification = (payload) => async (dispatch) => {
+  await api
+    .put(`/api/user/${payload.userId}/deviceToken/notification`, payload)
+    .then((res) => {
+      const { data } = res.data;
+
+      dispatch({ type: SAVE_USER_DATA, payload: data });
+    })
+    .catch((err) => {
+      console.log("Err", err);
+    });
+};
+
 export const userActions = {
   fetchAllUsers,
   fetchUserDetail,
+  addUserDeviceTokenForPushNotification,
 };

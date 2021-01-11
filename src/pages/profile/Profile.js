@@ -3,7 +3,9 @@ import Layout from "../../components/Layout";
 import { makeStyles, Typography, Container, Switch } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { geolocationActions } from "../../store/actions/geolocation.action";
-import usePushNotifications from "../../hooks/usePushNotifications";
+import { userActions } from "../../store/actions/user.action";
+import { messaging } from "../../init-fcm";
+import useWebApi from "../../hooks/useWebApi";
 
 const useStyles = makeStyles((theme) => ({
   profileSrc: {
@@ -24,25 +26,17 @@ const mobileTabActive = {
 };
 
 const Profile = () => {
+  const { userConsent, setSuserConsent, userLocation, setUserLocation } = useWebApi();
   const dispatch = useDispatch();
-  const {
-    userConsent,
-    pushNotificationSupported,
-    userSubscription,
-    onClickAskUserPermission,
-    onClickSusbribeToPushNotification,
-    onClickSendSubscriptionToPushServer,
-    pushServerSubscriptionId,
-    onClickSendNotification,
-  } = usePushNotifications();
 
   const classes = useStyles();
   const user = useSelector((state) => state.auth.user);
 
   const isConsentGranted = userConsent === "granted";
+  const isUserLocationGranted = userLocation === "granted";
 
   const [state, setState] = React.useState({
-    location: false,
+    location: isUserLocationGranted,
     notification: isConsentGranted,
   });
 
@@ -64,6 +58,29 @@ const Profile = () => {
         return { latitude, longitude };
       }, error);
     }
+  };
+
+  const onClickAskUserPermission = () => {
+    if (isConsentGranted) {
+      setSuserConsent(null);
+      setState({ ...state, notification: false });
+    } else {
+      setState({ ...state, notification: true });
+    }
+
+    messaging
+      .requestPermission()
+      .then(async function () {
+        const token = await messaging.getToken();
+        const payload = {
+          userId: user?._id ? user?._id : user.id,
+          deviceToken: token,
+        };
+        dispatch(userActions.addUserDeviceTokenForPushNotification(payload));
+      })
+      .catch(function (err) {
+        console.log("Unable to get permission to notify.", err);
+      });
   };
 
   return (
@@ -103,27 +120,6 @@ const Profile = () => {
             inputProps={{ "aria-label": "secondary checkbox" }}
           />
         </div>
-
-        <button
-          disabled={!pushNotificationSupported || !isConsentGranted || userSubscription}
-          onClick={onClickSusbribeToPushNotification}>
-          {userSubscription ? "Push subscription created" : "Create Notification subscription"}
-        </button>
-
-        <button
-          disabled={!userSubscription || pushServerSubscriptionId}
-          onClick={onClickSendSubscriptionToPushServer}>
-          {pushServerSubscriptionId
-            ? "Subscrption sent to the server"
-            : "Send subscription to push server"}
-        </button>
-
-        {pushServerSubscriptionId && (
-          <div>
-            <p>The server accepted the push subscrption!</p>
-            <button onClick={onClickSendNotification}>Send a notification</button>
-          </div>
-        )}
       </Container>
     </Layout>
   );

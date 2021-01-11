@@ -24,3 +24,22 @@ exports.fetchUserDetail = async (req, res) => {
       return res.status(404).json({ success: false, data: "User Not Found" });
     });
 };
+
+exports.addUserDeviceTokenForPushNotification = async (req, res) => {
+  const { id } = req.params;
+  await User.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        deviceToken: req.body.deviceToken,
+      },
+    },
+    { new: true },
+  )
+    .then((data) => {
+      return res.status(200).json({ success: true, data });
+    })
+    .catch((err) => {
+      return res.status(404).json({ success: false, data: "User Not Found" });
+    });
+};

@@ -49,9 +49,12 @@ const JoinRoomItemList = ({ room }) => {
           />
 
           <AvatarGroup max={4}>
-            {room?.users.map((member, i) => (
-              <Avatar alt={member.fullname} src={member.avatar_url} key={i} />
-            ))}
+            {room?.users
+              .slice(0)
+              .reverse()
+              .map((member, i) => (
+                <Avatar alt={member.fullname} src={member.avatar_url} key={i} />
+              ))}
           </AvatarGroup>
         </ListItem>
       </List>

@@ -17,6 +17,7 @@
     "better-docs": "^2.3.2",
     "dotenv": "^8.2.0",
     "emoji-mart": "^3.0.0",
+    "firebase": "^8.2.2",
     "formik": "^2.2.6",
     "haversine-distance": "^1.2.1",
     "husky": "^4.3.6",
