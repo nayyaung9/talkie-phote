@@ -8,12 +8,6 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme";
 import { store } from "./store";
 
-// navigator.serviceWorker.addEventListener("message", (message) => {
-//   console.log(message);
-// });
-
-console.log("navigator", navigator);
-
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("./firebase-messaging-sw.js")
