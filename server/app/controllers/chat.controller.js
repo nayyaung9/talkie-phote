@@ -63,7 +63,7 @@ exports.sendMessage = async (data, io) => {
                 body: message,
                 click_action: `https://talkie-phote.netlify.app/chat/${data[0].roomId}`,
                 icon: "https://talkie-phote.netlify.app/assets/image/appLogo.png",
-                sound: "http://localhost:3000/assets/audio/notification.mp3",
+                sound: "https://talkie-phote.netlify.app/assets/audio/notification.mp3",
               },
             };
 
