@@ -69,13 +69,13 @@ io.on("connection", async (socket) => {
 
   await chatController.fetchInitialMessageByRoomId(roomId, io);
 
-  socket.on("typing", (data) => {
-    const payload = JSON.parse(data);
-    io.in(roomId).emit("notifyTyping", {
-      username: payload.fullname,
-      message: "is typing...",
-    });
-  });
+  // socket.on("typing", (data) => {
+  //   const payload = JSON.parse(data);
+  //   io.in(roomId).emit("notifyTyping", {
+  //     username: payload.fullname,
+  //     message: "is typing...",
+  //   });
+  // });
 
   socket.on("stopTyping", () => {
     io.in(roomId).emit("notifyStopTyping", { status: false });

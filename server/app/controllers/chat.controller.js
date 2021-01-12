@@ -48,12 +48,22 @@ exports.sendMessage = async (data, io) => {
           async function sendNotificationToDevice() {
             await getRegistrationTokens();
             console.log("registrationTokens", registrationTokens);
+
+            let filteredRegisterTokens = registrationTokens.filter(function (token) {
+              return token !== null;
+            });
+
+            console.log("filteredRegisterTokens", filteredRegisterTokens);
             var fcmMessage = {
-              registration_ids: registrationTokens,
+              registration_ids: filteredRegisterTokens,
 
               notification: {
-                title: "Talkie-Phote: You have received a new message",
+                title: `${data[0].sender.fullname} sent a message.`,
+                subtitle: "Talkie-Phote: You have received a new message",
                 body: message,
+                click_action: `https://talkie-phote.netlify.app/chat/${data[0].roomId}`,
+                icon: "https://talkie-phote.netlify.app/assets/image/appLogo.png",
+                sound: "https://talkie-phote.netlify.app/assets/audio/notification.mp3",
               },
             };
 
